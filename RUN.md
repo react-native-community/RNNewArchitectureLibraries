@@ -42,3 +42,15 @@ This doc contains the logs of the steps done to achieve the final result.
     }
 }
 ```
+
+### [[Native Module] Create the JS import]()
+
+1. `mkdir example-library/src`
+1. `touch example-library/src/index.js`
+1. Paste the following content into the `index.js`
+```js
+// @flow
+import { NativeModules } from 'react-native'
+
+export default NativeModules.Calculator;
+```
