@@ -280,3 +280,21 @@ end
 1. Click on the `Compute` button and see the app working
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
+
+### [[TurboModule] Add the JavaScript specs]()
+
+1. `touch example-library/src/NativeCalculator.js`
+1. Paste the following code:
+    ```ts
+    // @flow
+    import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
+    import { TurboModuleRegistry } from 'react-native';
+
+    export interface Spec extends TurboModule {
+    // your module methods go here, for example:
+    add(a: number, b: number): Promise<number>;
+    }
+    export default (TurboModuleRegistry.get<Spec>(
+    'Calculator'
+    ): ?Spec);
+    ```
