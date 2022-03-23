@@ -653,3 +653,17 @@ end
 
     export default calculator;
     ```
+
+### [[TurboModule] Test the Turbomodule]()
+
+1. At the same level of example-library run `npx react-native init NewArchitecture --version next` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
+1. `cd NewArchitecture && yarn add ../example-library`
+1. Open `NewArchitecture/App.js` file and replace the content with the same file used for the [`OldArchitecture`](#test-old-architecture).
+1. To run the App on iOS, install the dependencies: `cd ios && pod install && cd ..`
+1. `npx react-native start` (In another terminal, to run Metro)
+1. Run the app:
+    1. iOS: `npx react-native run-ios`
+    1. Android `npx react-native run-android`
+1. Click on the `Compute` button and see the app working
+
+**Note:** NewArchitecture app has not been committed not to pollute the repository.
