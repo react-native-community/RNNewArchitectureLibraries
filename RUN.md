@@ -54,3 +54,71 @@ import { NativeModules } from 'react-native'
 
 export default NativeModules.Calculator;
 ```
+
+### [[Native Module] Create the iOS implementation]()
+
+1. `mkdir example-library/ios`
+1. Open Xcode
+1. Create a new static library in the `ios` folder called `RNCalculator`. Keep Objective-C as language.
+1. Make that the `Create Git repository on my mac` option is **unchecked**
+1. Open finder and arrange the files and folder as shown below:
+    ```
+    example-library
+    '-> ios
+        '-> RNCalculator
+            '-> RNCalculator.h
+            '-> RNCalculator.m
+        '-> RNCalculator.xcodeproj
+    ```
+    It is important that the `RNCalculator.xcodeproj` is a direct child of the `example-library/ios` folder.
+1. Open the `RNCalculator.h` file and update the code as it follows:
+    ```diff
+    - #import <Foundation/Foundation.h>
+    + #import <React/RCTBridgeModule.h>
+
+    + @interface RNCalculator : NSObject <RCTBridgeModule>
+
+    @end
+    ```
+1. Open the `RNCalculator.m` file and replace the code with the following:
+    ```objective-c
+    #import "RNCalculator.h"
+
+    @implementation RNCalculator
+
+    RCT_EXPORT_MODULE(Calculator)
+
+    RCT_REMAP_METHOD(add, addA:(NSInteger)a
+                            andB:(NSInteger)b
+                    withResolver:(RCTPromiseResolveBlock) resolve
+                    withRejecter:(RCTPromiseRejectBlock) reject)
+    {
+        NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+        resolve(result);
+    }
+
+    @end
+    ```
+1. In the `example-library` folder, create a `example-library.podspec` file
+1. Copy this code in the `podspec` file
+```ruby
+require "json"
+
+package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+
+Pod::Spec.new do |s|
+  s.name            = "example-library"
+  s.version         = package["version"]
+  s.summary         = package["description"]
+  s.description     = package["description"]
+  s.homepage        = package["homepage"]
+  s.license         = package["license"]
+  s.platforms       = { :ios => "11.0" }
+  s.author          = package["author"]
+  s.source          = { :git => package["repository"], :tag => "#{s.version}" }
+
+  s.source_files    = "ios/**/*.{h,m,mm,swift}"
+
+  s.dependency "React-Core"
+end
+```

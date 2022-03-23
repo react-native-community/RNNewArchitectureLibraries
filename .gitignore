@@ -1,0 +1,5 @@
+**/xcshareddata/*
+**/xcuserdata/*
+.DS_Store
+**/.DS_Store
+**/constents.xcworkspacedata
