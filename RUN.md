@@ -42,3 +42,16 @@ This doc contains the logs of the steps done to achieve the final result.
     }
 }
 ```
+
+### [[Native Module] Create the JS import]()
+
+1. `mkdir example-component/src`
+1. `touch example-component/src/index.js`
+1. Paste the following content into the `index.js`
+```js
+// @flow
+
+import { requireNativeComponent } from 'react-native'
+
+export default requireNativeComponent("ColoredView")
+```
