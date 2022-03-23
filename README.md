@@ -7,5 +7,5 @@ Please find a list of the branches below, with more information on which kind of
 
 ## Branches
 
-| Branch Name | Description |
-| ----------- | ----------- |
+| Branch Name | Description | Android | iOS |
+| ----------- | ----------- | ------- | --- |
