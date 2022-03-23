@@ -298,3 +298,20 @@ end
     'Calculator'
     ): ?Spec);
     ```
+
+### [[TurboModule] Set up CodeGen - iOS]()
+
+1. Open the `example-library/package.json`
+1. Add the following snippet at the end of it:
+    ```json
+    ,
+    "codegenConfig": {
+        "libraries": [
+            {
+            "name": "RNCalculatorSpec",
+            "type": "modules",
+            "jsSrcsDir": "src"
+            }
+        ]
+    }
+    ```
