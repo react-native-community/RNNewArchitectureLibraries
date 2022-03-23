@@ -323,3 +323,24 @@ end
 1. Play with the `color` property to see the View background color change
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
+
+### [[Fabric Component] Add the JavaScript specs]()
+
+1. `touch example-component/src/ColoredViewNativeComponent.js`
+1. Paste the following code:
+    ```ts
+    // @flow
+    import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes';
+    import type {HostComponent} from 'react-native';
+    import { ViewStyle } from 'react-native';
+    import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+    type NativeProps = $ReadOnly<{|
+    ...ViewProps,
+    color: string
+    |}>;
+
+    export default (codegenNativeComponent<NativeProps>(
+        'ColoredView',
+    ): HostComponent<NativeProps>);
+    ```
