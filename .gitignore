@@ -1,0 +1,8 @@
+**/xcshareddata/*
+**/xcuserdata/*
+.DS_Store
+**/.DS_Store
+**/constents.xcworkspacedata
+node_modules/
+OldArchitecture/
+NewArchitecture/
