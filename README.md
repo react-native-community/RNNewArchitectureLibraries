@@ -11,4 +11,5 @@ Please find a list of the branches below, with more information on which kind of
 
 | Branch Name | Description | RUN.md | Android | iOS |
 | ----------- | ----------- | ------ | ------- | --- |
-| [`feat/back-turbomodule`](https://github.com/cipolleschi/RNNewArchitectureLibraries/commits/feat/back-turbomodule) | This branch contains the step-by-step process to create a simple turbomodule which can be used in both the old amd the new architecture | [RUN](https://github.com/cipolleschi/RNNewArchitectureLibraries/blob/feat/back-turbomodule/RUN.md) | :x: | ✅ |
+| [`feat/back-turbomodule`](https://github.com/cipolleschi/RNNewArchitectureLibraries/commits/feat/back-turbomodule) | This branch contains the step-by-step process to create a simple TurboModule which can be used in both the old and the new architecture | [RUN](https://github.com/cipolleschi/RNNewArchitectureLibraries/blob/feat/back-turbomodule/RUN.md) | :x: | ✅ |
+| [`feat/back-fabric-comp`](https://github.com/cipolleschi/RNNewArchitectureLibraries/commits/feat/back-fabric-comp) | This branch contains the step-by-step process to create a simple Fabric Component which can be used in both the old and the new architecture | [RUN](https://github.com/cipolleschi/RNNewArchitectureLibraries/blob/feat/back-fabric-comp/RUN.md) | :x: | ✅ |
