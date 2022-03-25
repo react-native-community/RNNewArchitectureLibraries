@@ -6,7 +6,7 @@ TypeScript support for the new architecture is still in Beta. However, we would 
 
 ## Steps
 
-### [[Setup] Create the example-library folder and the package.json]()
+### [[Setup] Create the example-library folder and the config files]()
 
 1. `mkdir example-library`
 1. `touch example-library/package.json`
@@ -106,4 +106,24 @@ module.exports = {
     "target": "esnext"
   }
 }
+```
+
+### [[Native Module] Create the TS Specs]()
+
+1. `mkdir example-library/src`
+1. `touch example-library/src/index.ts`
+1. Paste the following content into the `index.ts`:
+
+```ts
+import { NativeModules } from 'react-native';
+
+const nativeCalculator = NativeModules.Calculator;
+
+class Calculator {
+  add(a: number, b: number): Promise<number> {
+    return nativeCalculator.add(a, b);
+  }
+}
+const calc = new Calculator();
+export default calc;
 ```
