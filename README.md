@@ -1,15 +1,109 @@
-# React Native New Architecture Library Samples
-This repo contains several branches that will help you understand how to setup your libraries for the React Native New Architecture. This should considered as a support material of the official migration guide.
+# Create a TurboModule with Typescript
 
-Here you will find runs of the migration guide on empty projects. Every commit is documented and allows to follow over on every step.
+TypeScript support for the new architecture is still in Beta. However, we would like to provide some examples and a walkthrough guide about how to write a TurboModule using TypeScript.
 
-You can find also a `RUN.md` file where all the steps are documented in a more human readable format.
+**WARNING:** TypeScript support is still in beta and some things may change in the next future.
 
-Please find a list of the branches below, with more information on which kind of setup they're addressing.
+## Steps
 
-## Branches
+### [[Setup] Create the example-library folder and the package.json]()
 
-| Branch Name | Description | RUN.md | Android | iOS |
-| ----------- | ----------- | ------ | ------- | --- |
-| [`feat/back-turbomodule`](https://github.com/cipolleschi/RNNewArchitectureLibraries/commits/feat/back-turbomodule) | This branch contains the step-by-step process to create a simple TurboModule which can be used in both the old and the new architecture | [RUN](https://github.com/cipolleschi/RNNewArchitectureLibraries/blob/feat/back-turbomodule/RUN.md) | :x: | ✅ |
-| [`feat/back-fabric-comp`](https://github.com/cipolleschi/RNNewArchitectureLibraries/commits/feat/back-fabric-comp) | This branch contains the step-by-step process to create a simple Fabric Component which can be used in both the old and the new architecture | [RUN](https://github.com/cipolleschi/RNNewArchitectureLibraries/blob/feat/back-fabric-comp/RUN.md) | :x: | ✅ |
+1. `mkdir example-library`
+1. `touch example-library/package.json`
+1. Paste the following code into the `package.json` file
+```json
+{
+  "name": "example-library",
+  "version": "0.1.0",
+  "description": "Showcase Turbomodule with backward compatibility in TypeScript",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "example-library.podspec",
+    "!lib/typescript/example",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "scripts": {
+    "typescript": "tsc --noEmit",
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": "https://github.com/<your_github_handle/example-library",
+  "author": "<Your Name> <your_email@your_provider.com> (https://github.com/<your_github_handle)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/<your_github_handle/example-library/issues"
+  },
+  "homepage": "https://github.com/<your_github_handle/example-library#readme",
+
+  "devDependencies": {
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.0",
+    "@types/react": "^16.9.19",
+    "@types/react-native": "0.62.13",
+    "typescript": "^4.1.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
+```
+1. `touch babel.config.js`
+1. Paste this code into the `babel.config.js` file:
+```js
+module.exports = {
+  presets: ['module:metro-react-native-babel-preset'],
+};
+```
+1. `touch tsconfig.build.json`
+1. Paste this code into the `tsconfig.build.json` file:
+```json
+{
+  "extends": "./tsconfig",
+  "exclude": ["example"]
+}
+```
+1. `touch tsconfig.json`
+1. Paste this code into the `tsconfig.json` file:
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "example-library": ["./src/index"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext"
+  }
+}
+```
