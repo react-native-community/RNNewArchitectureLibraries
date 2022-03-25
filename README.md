@@ -195,3 +195,51 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 end
 ```
+
+### <a name="test-old-architecture" />[[Native Module] Test The Native Module]()
+
+1. At the same level of example-library run `npx react-native init OldArchitecture --template react-native-template-typescript`
+1. `cd OldArchitecture && yarn add ../example-library`
+1. `cd ios && pod install && cd ..`
+1. `npx react-native start` (In another terminal, to run Metro)
+1. `npx react-native run-ios`
+1. Open `OldArchitecture/App.tsx` file and replace the content with:
+    ```ts
+    /**
+     * Sample React Native App
+    * https://github.com/facebook/react-native
+    *
+    * Generated with the TypeScript template
+    * https://github.com/react-native-community/react-native-template-typescript
+    *
+    * @format
+    */
+    import React, { useState } from 'react';
+    import {
+    SafeAreaView,
+    StatusBar,
+    Text,
+    Button,
+    } from 'react-native';
+    import Calculator from 'example-library/src/index';
+
+    const App = () => {
+    const [result, setResult] = useState<number | null>(null);
+
+    return (
+        <SafeAreaView>
+        <StatusBar barStyle={'dark-content'} />
+        <Text style={{marginLeft:20, marginTop:20}}>3+7={result ?? "Unknown"}</Text>
+        <Button title="Compute" onPress={async () => {
+            const newRes = await Calculator.add(5, 4);
+            setResult(newRes);
+        }} />
+        </SafeAreaView>
+    );
+    };
+
+    export default App;
+    ```
+1. Click on the `Compute` button and see the app working
+
+**Note:** OldArchitecture app has not been committed not to pollute the repository.
