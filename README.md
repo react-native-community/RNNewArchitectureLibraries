@@ -231,7 +231,7 @@ end
         <StatusBar barStyle={'dark-content'} />
         <Text style={{marginLeft:20, marginTop:20}}>3+7={result ?? "Unknown"}</Text>
         <Button title="Compute" onPress={async () => {
-            const newRes = await Calculator.add(5, 4);
+            const newRes = await Calculator.add(3, 7);
             setResult(newRes);
         }} />
         </SafeAreaView>
@@ -323,8 +323,6 @@ end
     }
     #endif
     ```
-<<<<<<< HEAD
-=======
 
 ### [[TurboModule] Unify JavaScript interface]()
 
@@ -340,4 +338,16 @@ end
 
     export default calculator;
     ```
->>>>>>> 81784a54 ([TurboModule] Unify JavaScript interface)
+
+### [[TurboModule] Test the Turbomodule]()
+
+1. At the same level of example-library run `npx react-native init NewArchitecture --version next` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
+1. Follow the steps in [this article](https://reactnative.dev/blog/2018/05/07/using-typescript-with-react-native) to integrate TypeScript with the new architecture (the first two steps can be replaced by the command `npx react-native init NewArchitecture --version next --template react-native-template-typescript` as soon as the template is migrated to the New Architecture).
+1. `cd NewArchitecture && yarn add ../example-library`
+1. `cd ios && RCT_NEW_ARCH_ENABLED=1 pod install && cd ..`
+1. `npx react-native start` (In another terminal, to run Metro)
+1. `npx react-native run-ios`
+1. Open `NewArchitecture/App.js`, rename it into `NewArchitecture/App.tsx` file and replace the content with the same file used for the [`OldArchitecture`](#test-old-architecture).
+1. Click on the `Compute` button and see the app working
+
+**Note:** NewArchitecture app has not been committed not to pollute the repository.
