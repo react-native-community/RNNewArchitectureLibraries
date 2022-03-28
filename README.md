@@ -323,3 +323,21 @@ end
     }
     #endif
     ```
+<<<<<<< HEAD
+=======
+
+### [[TurboModule] Unify JavaScript interface]()
+
+1. Rename the `src/index.tsx` file into `src/Calculator.ts`
+1. Create a new `src/index.ts` file
+1. Replace the code with the following:
+    ```ts
+    const isTurboModuleEnabled = global.__turboModuleProxy != null;
+
+    const calculator = isTurboModuleEnabled ?
+        require("./NativeCalculator").default :
+        require("./Calculator").default;
+
+    export default calculator;
+    ```
+>>>>>>> 81784a54 ([TurboModule] Unify JavaScript interface)
