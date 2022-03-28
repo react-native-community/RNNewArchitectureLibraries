@@ -301,3 +301,25 @@ end
         s.dependency "ReactCommon/turbomodule/core"
     end
     ```
+
+### [[TurboModule] Update the Native iOS code]()
+
+1. In the `ios/RNCalculator` folder, rename the `RNCalculator.m` into `RNCalculator.mm`
+1. Open it and add the following `import`:
+    ```c++
+    // Thanks to this guard, we won't import this header when we build for the old architecture.
+    #ifdef RCT_NEW_ARCH_ENABLED
+    #import "RNCalculatorSpec.h"
+    #endif
+    ```
+1. Then, before the `@end` keyword, add the following code:
+    ```c++
+    // Thanks to this guard, we won't compile this code when we build for the old architecture.
+    #ifdef RCT_NEW_ARCH_ENABLED
+    - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+        (const facebook::react::ObjCTurboModule::InitParams &)params
+    {
+        return std::make_shared<facebook::react::NativeCalculatorSpecJSI>(params);
+    }
+    #endif
+    ```
