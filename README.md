@@ -6,7 +6,7 @@ TypeScript support for the new architecture is still in Beta. However, we would 
 
 ## Steps
 
-### [[Setup] Create the example-library folder and the config files]()
+### [[Setup] Create the example-library folder and the config files](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/63c8deb789a76068ae904dda0802decda6849986)
 
 1. `mkdir example-library`
 1. `touch example-library/package.json`
@@ -108,7 +108,7 @@ module.exports = {
 }
 ```
 
-### [[Native Module] Create the TS Specs]()
+### [[Native Module] Create the TypeScript Specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/2d373b214d628f05e1634299602995e4b3ec8079)
 
 1. `mkdir example-library/src`
 1. `touch example-library/src/index.ts`
@@ -128,7 +128,7 @@ const calc = new Calculator();
 export default calc;
 ```
 
-### [[Native Module] Create the iOS implementation]()
+### [[Native Module] Create the iOS implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/ba436450938964c43d617743a2162ed678b9b8b4)
 
 1. `mkdir example-library/ios`
 1. Open Xcode
@@ -196,7 +196,7 @@ Pod::Spec.new do |s|
 end
 ```
 
-### <a name="test-old-architecture" />[[Native Module] Test The Native Module]()
+### <a name="test-old-architecture" />[[Native Module] Test The Native Module](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/fde08f803cc995eee8cc9b735960b94f1409dc87)
 
 1. At the same level of example-library run `npx react-native init OldArchitecture --template react-native-template-typescript`
 1. `cd OldArchitecture && yarn add ../example-library`
@@ -244,7 +244,7 @@ end
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
 
-### [[TurboModule] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/54aedba81461301f4e2bc602ebc8df78e0df2639)
+### [[TurboModule] Add the TypeScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/8bfa794805510717e12501a59898e0830c2d40a0)
 
 1. `touch example-library/src/NativeCalculator.ts`
 1. Paste the following code:
@@ -260,7 +260,7 @@ end
     export default TurboModuleRegistry.get<Spec>('Calculator');
     ```
 
-### [[TurboModule] Setup Codegen]()
+### [[TurboModule] Setup Codegen](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/c090ac010d849fcad21a56c26459bf9687331019)
 
 1. Open the `example-library/package.json`
 1. Add the following snippet at the end of it:
@@ -277,7 +277,7 @@ end
     }
     ```
 
-### [[TurboModule] Set up `podspec` file]()
+### [[TurboModule] Set up `podspec` file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/027b492912c9bf2919d4dd081a04eeb62613047b)
 
 1. Open the `example-library/example-library.podspec` file
 1. Before the `Pod::Spec.new do |s|` add the following code:
@@ -302,7 +302,7 @@ end
     end
     ```
 
-### [[TurboModule] Update the Native iOS code]()
+### [[TurboModule] Update the Native iOS code](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/566f91cd56b85a9c5616f44a2b144b25b55cf3ba)
 
 1. In the `ios/RNCalculator` folder, rename the `RNCalculator.m` into `RNCalculator.mm`
 1. Open it and add the following `import`:
@@ -324,7 +324,7 @@ end
     #endif
     ```
 
-### [[TurboModule] Unify JavaScript interface]()
+### [[TurboModule] Unify JavaScript interface](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/605baf22179252958b2be7b96613c3e596dc553d)
 
 1. Rename the `src/index.tsx` file into `src/Calculator.ts`
 1. Create a new `src/index.ts` file
@@ -339,10 +339,9 @@ end
     export default calculator;
     ```
 
-### [[TurboModule] Test the Turbomodule]()
+### [[TurboModule] Test the Turbomodule](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/2a2ac4b1395a5f90bbcf40b253a2d4a4d8dba187)
 
-1. At the same level of example-library run `npx react-native init NewArchitecture --version next` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
-1. Follow the steps in [this article](https://reactnative.dev/blog/2018/05/07/using-typescript-with-react-native) to integrate TypeScript with the new architecture (the first two steps can be replaced by the command `npx react-native init NewArchitecture --version next --template react-native-template-typescript` as soon as the template is migrated to the New Architecture).
+1. At the same level of example-library run `npx react-native init NewArchitecture --version next --template react-native-template-typescript@6.10.0-rc.1` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
 1. `cd NewArchitecture && yarn add ../example-library`
 1. `cd ios && RCT_NEW_ARCH_ENABLED=1 pod install && cd ..`
 1. `npx react-native start` (In another terminal, to run Metro)
