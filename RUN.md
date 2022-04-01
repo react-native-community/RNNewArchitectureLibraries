@@ -458,3 +458,113 @@ end
         }
     }
     ```
+
+### [[TurboModule] Android: Update the Native code to use two sourcesets]()
+
+1. Open the `example-library/android/build.gradle` file and update the code as it follows:
+    ```diff
+        defaultConfig {
+            minSdkVersion safeExtGet('minSdkVersion', 21)
+            targetSdkVersion safeExtGet('targetSdkVersion', 31)
+    +        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    +    }
+    +
+    +    sourceSets {
+    +        main {
+    +            if (isNewArchitectureEnabled()) {
+    +                java.srcDirs += ['src/newarch']
+    +            } else {
+    +                java.srcDirs += ['src/oldarch']
+    +            }
+    +        }
+        }
+    }
+    ```
+1. Remove the file: `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModule.java`.
+1. Open the `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorPackage.java` and update the `getReactModuleInfoProvider` function as it follows:
+    ```diff
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return () -> {
+            final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
++            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+            moduleInfos.put(
+                    CalculatorModule.NAME,
+                    new ReactModuleInfo(
+                            CalculatorModule.NAME,
+                            CalculatorModule.NAME,
+                            false, // canOverrideExistingModule
+                            false, // needsEagerInit
+                            true, // hasConstants
+                            false, // isCxxModule
+-                            false, // isTurboModule
++                            isTurboModule // isTurboModule
+            ));
+            return moduleInfos;
+        };
+    ```
+1. Create a file `example-library/android/src/newarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` (notice the `newarch` child of the `src` folder) and paste the following code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.NonNull;
+    import com.facebook.react.bridge.NativeModule;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class CalculatorModule extends NativeCalculatorSpec {
+
+        public static final String NAME = "Calculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        @NonNull
+        public String getName() {
+            return NAME;
+        }
+
+        @Override
+        public void add(double a, double b, Promise promise) {
+            promise.resolve(a + b);
+        }
+    }
+    ```
+1. Create a file `example-library/android/src/oldarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` (notice the `oldarch` child of the `src` folder) and paste the following code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import com.facebook.react.bridge.NativeModule;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class CalculatorModule extends ReactContextBaseJavaModule {
+
+        public static final String NAME = "Calculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        public String getName() {
+            return NAME;
+        }
+
+        @ReactMethod
+        public void add(int a, int b, Promise promise) {
+            promise.resolve(a + b);
+        }
+    }
+    ```
