@@ -122,3 +122,110 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 end
 ```
+
+### [[Native Module] Create the Android implementation]()
+
+1. Create a folder `example-library/android`
+1. Create a file `example-library/android/build.gradle` and add this code:
+    ```js
+    buildscript {
+        ext.safeExtGet = {prop, fallback ->
+            rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+        }
+        repositories {
+            google()
+        gradlePluginPortal()
+        }
+        dependencies {
+            classpath("com.android.tools.build:gradle:7.0.4")
+        }
+    }
+
+    apply plugin: 'com.android.library'
+
+    android {
+        compileSdkVersion safeExtGet('compileSdkVersion', 31)
+
+        defaultConfig {
+            minSdkVersion safeExtGet('minSdkVersion', 21)
+            targetSdkVersion safeExtGet('targetSdkVersion', 31)
+        }
+    }
+
+    repositories {
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$projectDir/../node_modules/react-native/android"
+        }
+        mavenCentral()
+        google()
+    }
+
+    dependencies {
+        implementation 'com.facebook.react:react-native:+'
+    }
+    ```
+1. Create a file `example-library/android/src/main/AndroidManifest.xml` and add this code:
+    ```xml
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+            package="com.rnnewarchitecturelibrary">
+    </manifest>
+    ```
+1. Create a file `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModule.java` and add this code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import com.facebook.react.bridge.NativeModule;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class CalculatorModule extends ReactContextBaseJavaModule {
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        public String getName() {
+            return "Calculator";
+        }
+
+        @ReactMethod
+        public void add(int a, int b, Promise promise) {
+            promise.resolve(a + b);
+        }
+    }
+    ```
+1. Create a file `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorPackage.java` and add this code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import com.facebook.react.ReactPackage;
+    import com.facebook.react.bridge.NativeModule;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.uimanager.ViewManager;
+
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.List;
+
+    public class CalculatorPackage implements ReactPackage {
+
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
+        modules.add(new CalculatorModule(reactContext));
+        return modules;
+    }
+
+    }
+    ```
