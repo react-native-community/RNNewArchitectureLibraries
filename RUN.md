@@ -315,3 +315,31 @@ end
         ]
     }
     ```
+
+### [[TurboModule] Set up CodeGen - Android]()
+
+1. Open the `example-library/android/build.gradle` file and update the code as follows:
+    ```diff
+    + def isNewArchitectureEnabled() {
+    +    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+    +}
+
+    apply plugin: 'com.android.library'
+    +if (isNewArchitectureEnabled()) {
+    +    apply plugin: 'com.facebook.react'
+    +}
+
+    // ... other parts of the build file
+
+    dependencies {
+        implementation 'com.facebook.react:react-native:+'
+    }
+
+    + if (isNewArchitectureEnabled()) {
+    +     react {
+    +         jsRootDir = file("../src/")
+    +         libraryName = "calculator"
+    +         codegenJavaPackageName = "com.rnnewarchitecturelibrary"
+    +     }
+    + }
+    ```
