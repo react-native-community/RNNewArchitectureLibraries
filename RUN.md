@@ -568,3 +568,73 @@ end
         }
     }
     ```
+
+### [[TurboModule] Android: Refactor the code to use a shared implementation]()
+
+1. Create a new `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModuleImpl.java` file (notice that the `src`'s subfolder is now `main`) and paste the following code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.NonNull;
+    import com.facebook.react.bridge.Promise;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class CalculatorModuleImpl {
+
+        public static final String NAME = "Calculator";
+
+        public static void add(double a, double b, Promise promise) {
+            promise.resolve(a + b);
+        }
+
+    }
+    ```
+1. Open the `example-library/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorPackage.java` file and replace all the instances of `CalculatorModule` with `CalculatorModuleImpl`
+1. Open the `example-library/android/src/newarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` file and update it as it follows:
+    ```diff
+    public class CalculatorModule extends NativeCalculatorSpec {
+
+    -    public static final String NAME = "Calculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        @NonNull
+        public String getName() {
+    -        return NAME;
+    +        return CalculatorModuleImpl.NAME;
+        }
+
+        @Override
+        public void add(double a, double b, Promise promise) {
+    -        promise.resolve(a + b);
+    +        CalculatorModuleImpl.add(a, b, promise);
+        }
+    }
+    ```
+1. Open the `example-library/android/src/oldarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` and update it as it follows:
+    ```diff
+    public class CalculatorModule extends ReactContextBaseJavaModule {
+
+    -    public static final String NAME = "Calculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        public String getName() {
+    -        return NAME;
+    +        return CalculatorModuleImpl.NAME;
+        }
+
+        @ReactMethod
+        public void add(int a, int b, Promise promise) {
+    -        promise.resolve(a + b);
+    +        CalculatorModuleImpl.add(a, b, promise);
+        }
+    }
+    ```

@@ -12,8 +12,6 @@ import java.util.HashMap;
 
 public class CalculatorModule extends NativeCalculatorSpec {
 
-    public static final String NAME = "Calculator";
-
     CalculatorModule(ReactApplicationContext context) {
         super(context);
     }
@@ -21,11 +19,11 @@ public class CalculatorModule extends NativeCalculatorSpec {
     @Override
     @NonNull
     public String getName() {
-        return NAME;
+        return CalculatorModuleImpl.NAME;
     }
 
     @Override
     public void add(double a, double b, Promise promise) {
-        promise.resolve(a + b);
+        CalculatorModuleImpl.add(a, b, promise);
     }
 }
