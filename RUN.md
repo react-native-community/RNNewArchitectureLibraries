@@ -636,3 +636,107 @@ end
 
     }
     ```
+
+### [[Fabric Component] Android: Refactor the code to use a shared implementation]()
+
+1. Create a common implementation in `example-component/android/src/main/java/com/rnnewarchitecturelibrary/ColoredViewManagerImpl.java` with the following code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.Nullable;
+    import com.facebook.react.uimanager.ThemedReactContext;
+    import android.graphics.Color;
+
+    public class ColoredViewManagerImpl {
+
+        public static final String NAME = "ColoredView";
+
+        public static ColoredView createViewInstance(ThemedReactContext context) {
+            return new ColoredView(context);
+        }
+
+        public static void setColor(ColoredView view, String color) {
+            view.setBackgroundColor(Color.parseColor(color));
+        }
+
+    }
+    ```
+1. Update the `ColoredViewManager` in the `src/newarch` path:
+    ```diff
+    import com.facebook.react.uimanager.ThemedReactContext;
+    import com.facebook.react.uimanager.ViewManagerDelegate;
+    import com.facebook.react.uimanager.annotations.ReactProp;
+    import com.facebook.react.viewmanagers.ColoredViewManagerDelegate;
+    import com.facebook.react.viewmanagers.ColoredViewManagerInterface;
+
+    - @ReactModule(name = ColoredViewManager.NAME)
+    + @ReactModule(name = ColoredViewManagerImpl.NAME)
+    public class ColoredViewManager extends SimpleViewManager<ColoredView>
+            implements ColoredViewManagerInterface<ColoredView> {
+
+    -    public static final String NAME = "ColoredView";
+    -
+        private final ViewManagerDelegate<ColoredView> mDelegate;
+
+        public ColoredViewManager(ReactApplicationContext context) {
+            mDelegate = new ColoredViewManagerDelegate<>(this);
+        }
+        @Nullable
+        @Override
+        protected ViewManagerDelegate<ColoredView> getDelegate() {
+            return mDelegate;
+        }
+        @NonNull
+        @Override
+        public String getName() {
+    -        return NAME;
+    +        return ColoredViewManagerImpl.NAME;
+        }
+
+        @NonNull
+        @Override
+        protected ColoredView createViewInstance(@NonNull ThemedReactContext context) {
+    -        return new ColoredView(context);
+    +        return ColoredViewManagerImpl.createViewInstance(context);
+        }
+
+        @Override
+        @ReactProp(name = "color")
+        public void setColor(ColoredView view, @Nullable String color) {
+    -        view.setBackgroundColor(Color.parseColor(color));
+    +        ColoredViewManagerImpl.setColor(view, color);
+        }
+    }
+    ```
+1. Update the `ColoredViewManager` in the `src/oldarch` path:
+    ```diff
+    public class ColoredViewManager extends SimpleViewManager<ColoredView> {
+
+    _    public static final String NAME = "ColoredView";
+    -
+        ReactApplicationContext mCallerContext;
+
+        public ColoredViewManager(ReactApplicationContext reactContext) {
+            mCallerContext = reactContext;
+        }
+
+        @Override
+        public String getName() {
+    -        return NAME;
+    +        return ColoredViewManagerImpl.NAME;
+        }
+
+        @Override
+        public ColoredView createViewInstance(ThemedReactContext context) {
+    -        return new ColoredView(context);
+    +        return ColoredViewManagerImpl.createViewInstance(context);
+        }
+
+        @ReactProp(name = "color")
+        public void setColor(ColoredView view, String color) {
+    -        view.setBackgroundColor(Color.parseColor(color));
+    +        ColoredViewManagerImpl.setColor(view, color);
+        }
+
+    }
+    ```

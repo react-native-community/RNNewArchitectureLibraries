@@ -12,8 +12,6 @@ import java.util.HashMap;
 
 public class ColoredViewManager extends SimpleViewManager<ColoredView> {
 
-    public static final String NAME = "ColoredView";
-    
     ReactApplicationContext mCallerContext;
 
     public ColoredViewManager(ReactApplicationContext reactContext) {
@@ -22,17 +20,17 @@ public class ColoredViewManager extends SimpleViewManager<ColoredView> {
 
     @Override
     public String getName() {
-        return NAME;
+        return ColoredViewManagerImpl.NAME;
     }
 
     @Override
     public ColoredView createViewInstance(ThemedReactContext context) {
-        return new ColoredView(context);
+        return ColoredViewManagerImpl.createViewInstance(context);
     }
 
     @ReactProp(name = "color")
     public void setColor(ColoredView view, String color) {
-        view.setBackgroundColor(Color.parseColor(color));
+        ColoredViewManagerImpl.setColor(view, color);
     }
 
 }

@@ -12,14 +12,13 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewManagerDelegate;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.viewmanagers.ColoredViewManagerDelegate;
 import com.facebook.react.viewmanagers.ColoredViewManagerInterface;
+import com.facebook.react.viewmanagers.ColoredViewManagerDelegate;
 
-@ReactModule(name = ColoredViewManager.NAME)
+    
+@ReactModule(name = ColoredViewManagerImpl.NAME)
 public class ColoredViewManager extends SimpleViewManager<ColoredView>
         implements ColoredViewManagerInterface<ColoredView> {
-
-    public static final String NAME = "ColoredView";
 
     private final ViewManagerDelegate<ColoredView> mDelegate;
 
@@ -36,18 +35,18 @@ public class ColoredViewManager extends SimpleViewManager<ColoredView>
     @NonNull
     @Override
     public String getName() {
-        return NAME;
+        return ColoredViewManagerImpl.NAME;
     }
 
     @NonNull
     @Override
     protected ColoredView createViewInstance(@NonNull ThemedReactContext context) {
-        return new ColoredView(context);
+        return ColoredViewManagerImpl.createViewInstance(context);
     }
 
     @Override
     @ReactProp(name = "color")
     public void setColor(ColoredView view, @Nullable String color) {
-        view.setBackgroundColor(Color.parseColor(color));
+        ColoredViewManagerImpl.setColor(view, color);
     }
 }
