@@ -361,3 +361,28 @@ end
         ]
     }
     ```
+
+### [[Fabric Component] Set up CodeGen - Android]()
+
+1. Open the `example-component/android/build.gradle` file and update it as it follows:
+    1. At the beginning of the file, add the following lines:
+        ```diff
+        +   def isNewArchitectureEnabled() {
+        +       return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+        +   }
+        +
+        apply plugin: 'com.android.library'
+        +   if (isNewArchitectureEnabled()) {
+        +       apply plugin: 'com.facebook.react'
+        +   }
+        ```
+    1. At the end of the file, add the following lines:
+        ```diff
+        + if (isNewArchitectureEnabled()) {
+        +     react {
+        +         jsRootDir = file("../src/")
+        +         libraryName = "colorview"
+        +         codegenJavaPackageName = "com.rnnewarchitecturelibrary"
+        +     }
+        + }
+        ```
