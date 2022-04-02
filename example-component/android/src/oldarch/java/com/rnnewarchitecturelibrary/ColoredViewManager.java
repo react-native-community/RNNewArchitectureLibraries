@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class ColoredViewManager extends SimpleViewManager<ColoredView> {
 
     public static final String NAME = "ColoredView";
+    
     ReactApplicationContext mCallerContext;
 
     public ColoredViewManager(ReactApplicationContext reactContext) {
