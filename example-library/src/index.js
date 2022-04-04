@@ -1,4 +1,10 @@
 // @flow
 import { NativeModules } from 'react-native'
 
-export default NativeModules.Calculator;
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
+
+const calculator = isTurboModuleEnabled ?
+  require("./NativeCalculator").default :
+  NativeModules.Calculator;
+
+export default calculator;

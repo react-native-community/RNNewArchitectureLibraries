@@ -637,4 +637,19 @@ end
     +        CalculatorModuleImpl.add(a, b, promise);
         }
     }
+### [[TurboModule] Unify JavaScript interface]()
+
+1. Open the `src/index.js` file
+1. Replace the code with the following:
+    ```ts
+    // @flow
+    import { NativeModules } from 'react-native'
+
+    const isTurboModuleEnabled = global.__turboModuleProxy != null;
+
+    const calculator = isTurboModuleEnabled ?
+    require("./NativeCalculator").default :
+    NativeModules.Calculator;
+
+    export default calculator;
     ```
