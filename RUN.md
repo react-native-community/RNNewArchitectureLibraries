@@ -278,3 +278,48 @@ end
 
     }
     ```
+### <a name="test-old-architecture" />[[Native Component] Test The Native Component]()
+
+1. At the same level of example-library run `npx react-native init OldArchitecture`
+1. `cd OldArchitecture && yarn add ../example-component`
+1. If running on iOS, install the dependencies with `cd ios && pod install && cd ..`
+1. `npx react-native start` (In another terminal, to run Metro)
+1. Run the app:
+    1. For iOS: `npx react-native run-ios`
+    1. For android: `npx react-native run-android`
+1. Open `OldArchitecture/App.js` file and replace the content with:
+    ```js
+    /**
+     * Sample React Native App
+    * https://github.com/facebook/react-native
+    *
+    * @format
+    * @flow strict-local
+    */
+
+    import React from 'react';
+    import type {Node} from 'react';
+    import {
+        SafeAreaView,
+        StatusBar,
+        Text,
+        View,
+    } from 'react-native';
+
+    import ColoredView from 'example-component/src/index'
+
+    const App: () => Node = () => {
+
+    return (
+        <SafeAreaView>
+        <StatusBar barStyle={'dark-content'} />
+        <ColoredView color="#FF0099" style={{marginLeft:10, marginTop:20, width:100, height:100}}/>
+        </SafeAreaView>
+        );
+    };
+
+    export default App;
+    ```
+1. Play with the `color` property to see the View background color change
+
+**Note:** OldArchitecture app has not been committed not to pollute the repository.
