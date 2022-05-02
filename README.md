@@ -23,8 +23,8 @@ This doc contains the logs of the steps done to achieve the final result.
 
 ### <a name="setup" />[[Setup] Create the example-component folder and the package.json](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/7c839743b55c8309a6c2aafb2c05916dd79516dc)
 
-1. `mkdir example-library`
-1. `touch example-library/package.json`
+1. `mkdir example-component`
+1. `touch example-component/package.json`
 1. Paste the following code into the `package.json` file
 ```json
 {
@@ -81,7 +81,7 @@ export default requireNativeComponent("ColoredView")
 1. Make that the `Create Git repository on my mac` option is **unchecked**
 1. Open finder and arrange the files and folder as shown below:
     ```
-    example-library
+    example-component
     '-> ios
         '-> RNColoredView
             '-> RNColoredView.h
@@ -297,7 +297,7 @@ end
     ```
 ### <a name="test-old-architecture" />[[Native Component] Test The Native Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/745553b6ba053b97efdb678a48c18156d47c145e)
 
-1. At the same level of example-library run `npx react-native init OldArchitecture`
+1. At the same level of example-component run `npx react-native init OldArchitecture`
 1. `cd OldArchitecture && yarn add ../example-component`
 1. If running on iOS, install the dependencies with `cd ios && pod install && cd ..`
 1. `npx react-native start` (In another terminal, to run Metro)
@@ -776,7 +776,7 @@ end
 
 ### <a name="test-fabric" />[[Fabric Component] Test the Fabric Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/f9379788ae7fa77fc91c58571f3b5d376004ce88)
 
-1. At the same level of example-library run `npx react-native init NewArchitecture --version next` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
+1. At the same level of example-component run `npx react-native init NewArchitecture --version next` (`next` takes the next version that is about to be released. Any version >= 0.68 should work)
 1. `cd NewArchitecture && yarn add ../example-component`
 1. If running on iOS, install the dependencies with `cd ios && RCT_NEW_ARCH_ENABLED=1 pod install && cd ..`
 1. `npx react-native start` (In another terminal, to run Metro)
