@@ -729,7 +729,7 @@ end
     ```diff
     public class ColoredViewManager extends SimpleViewManager<ColoredView> {
 
-    _    public static final String NAME = "ColoredView";
+    -    public static final String NAME = "ColoredView";
     -
         ReactApplicationContext mCallerContext;
 
