@@ -434,7 +434,7 @@ end
 
 ### <a name="fabric-ios">[[Fabric Component] Update the Native iOS code](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/ecedf329177991302f9c8d724bc71d49c401d731)
 
-1. In the `example-component/ios/RNColoredView` folder, rename the `RNColoredView.m` into `RNColoredViewManager.mm`
+1. In the `example-component/ios/RNColoredView` folder, rename the `RNColoredViewManager.m` into `RNColoredViewManager.mm`
 1. Create a new header and call it `RNColoredView.h`
 1. Paste the following code in the new header:
     ```objective-c
