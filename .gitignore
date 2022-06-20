@@ -2,7 +2,7 @@
 **/xcuserdata/*
 .DS_Store
 **/.DS_Store
-**/constents.xcworkspacedata
+**/contents.xcworkspacedata
 node_modules/
 OldArchitecture/
 NewArchitecture/
