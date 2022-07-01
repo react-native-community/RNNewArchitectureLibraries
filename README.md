@@ -78,7 +78,7 @@ export default NativeModules.Calculator;
 1. `mkdir example-library/ios`
 1. Open Xcode
 1. Create a new static library in the `ios` folder called `RNCalculator`. Keep Objective-C as language.
-1. Make that the `Create Git repository on my mac` option is **unchecked**
+1. Make sure that the `Create Git repository on my mac` option is **unchecked**
 1. Open finder and arrange the files and folder as shown below:
     ```
     example-library
