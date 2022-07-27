@@ -14,6 +14,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Fabric Component] Update gradle](#update-gradle)
 * [[Fabric Component] Set up `podspec` file](#ios-podspec)
 * [[Fabric Component] Update the Native iOS code](#fabric-ios)
+* [[Fabric Component] Android: Update the Native code to use two sourcesets](#android-sourceset)
 
 ## Steps
 
@@ -498,4 +499,123 @@ end
 
     @end
     #endif
+    ```
+
+### <a name="android-sourceset" />[[Fabric Component] Android: Update the Native code to use two sourcesets](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Remove the file `colored-view/android/src/main/java/com/rnnewarchitecturelibrary/ColoredViewManager.java`.
+1. Open the `colored-view/android/build.gradle` file and add the following lines:
+    ```diff
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 21)
+        targetSdkVersion safeExtGet('targetSdkVersion', 31)
+    +     buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+    + }
+    +
+    + sourceSets {
+    +     main {
+    +         if (isNewArchitectureEnabled()) {
+    +             java.srcDirs += ['src/newarch']
+    +         } else {
+    +             java.srcDirs += ['src/oldarch']
+    +         }
+    +     }
+    + }
+    ```
+1. Create a View Manager for the New Architecture `colored-view/android/src/newarch/java/com/rnnewarchitecturelibrary/ColoredViewManager.java` (Notice the `src/newarch` segment in the path) with this code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import android.graphics.Color;
+
+    import androidx.annotation.NonNull;
+    import androidx.annotation.Nullable;
+
+    import com.facebook.react.bridge.ReadableArray;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.module.annotations.ReactModule;
+    import com.facebook.react.uimanager.SimpleViewManager;
+    import com.facebook.react.uimanager.ThemedReactContext;
+    import com.facebook.react.uimanager.ViewManagerDelegate;
+    import com.facebook.react.uimanager.annotations.ReactProp;
+    import com.facebook.react.viewmanagers.ColoredViewManagerDelegate;
+    import com.facebook.react.viewmanagers.ColoredViewManagerInterface;
+
+    @ReactModule(name = ColoredViewManager.NAME)
+    public class ColoredViewManager extends SimpleViewManager<ColoredView>
+            implements ColoredViewManagerInterface<ColoredView> {
+
+        public static final String NAME = "ColoredView";
+
+        private final ViewManagerDelegate<ColoredView> mDelegate;
+
+        public ColoredViewManager(ReactApplicationContext context) {
+            mDelegate = new ColoredViewManagerDelegate<>(this);
+        }
+
+        @Nullable
+        @Override
+        protected ViewManagerDelegate<ColoredView> getDelegate() {
+            return mDelegate;
+        }
+
+        @NonNull
+        @Override
+        public String getName() {
+            return NAME;
+        }
+
+        @NonNull
+        @Override
+        protected ColoredView createViewInstance(@NonNull ThemedReactContext context) {
+            return new ColoredView(context);
+        }
+
+        @Override
+        @ReactProp(name = "color")
+        public void setColor(ColoredView view, @Nullable String color) {
+            view.setBackgroundColor(Color.parseColor(color));
+        }
+    }
+    ```
+1. Create a View Manager for the Old Architecture `colored-view/android/src/oldarch/java/com/rnnewarchitecturelibrary/ColoredViewManager.java` (Notice the `src/oldarch` segment in the path) with this code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.Nullable;
+    import com.facebook.react.module.annotations.ReactModule;
+    import com.facebook.react.uimanager.SimpleViewManager;
+    import com.facebook.react.uimanager.ThemedReactContext;
+    import com.facebook.react.uimanager.annotations.ReactProp;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import android.graphics.Color;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class ColoredViewManager extends SimpleViewManager<ColoredView> {
+
+        public static final String NAME = "ColoredView";
+
+        ReactApplicationContext mCallerContext;
+
+        public ColoredViewManager(ReactApplicationContext reactContext) {
+            mCallerContext = reactContext;
+        }
+
+        @Override
+        public String getName() {
+            return NAME;
+        }
+
+        @Override
+        public ColoredView createViewInstance(ThemedReactContext context) {
+            return new ColoredView(context);
+        }
+
+        @ReactProp(name = "color")
+        public void setColor(ColoredView view, String color) {
+            view.setBackgroundColor(Color.parseColor(color));
+        }
+
+    }
     ```
