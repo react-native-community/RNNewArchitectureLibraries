@@ -10,6 +10,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Native Component] Create the Android implementation](#native-android)
 * [[Native Component] Test The Native Component](#test-old-architecture)
 * [[Fabric Component] Add the JavaScript specs](#fabric-specs)
+* [[Fabric Component] Set up CodeGen](#codegen)
 
 ## Steps
 
@@ -319,7 +320,7 @@ end
 
 ### <a name="fabric-specs" />[[Fabric Component] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
 
-1. `touch example-component/src/ColoredViewNativeComponent.js`
+1. `touch colored-view/src/ColoredViewNativeComponent.js`
 1. Paste the following code:
     ```ts
     // @flow
@@ -336,4 +337,17 @@ end
     export default (codegenNativeComponent<NativeProps>(
         'ColoredView',
     ): HostComponent<NativeProps>);
+    ```
+
+### <a name="codegen" />[[Fabric Component] Set up CodeGen](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/7c5218a3a6966883c7b8b1faca618b76aeb46b3a)
+
+1. Open the `colored-view/package.json`
+1. Add the following snippet at the end of it:
+    ```json
+    ,
+    "codegenConfig": {
+        "name": "RNColoredViewSpec",
+        "type": "components",
+        "jsSrcsDir": "src"
+    }
     ```
