@@ -5,6 +5,7 @@ This doc contains the logs of the steps done to achieve the final result.
 ## Table of Contents
 
 * [[Setup] Create the colored-view folder and the package.json](#setup)
+* [[Native Component] Create the JS import](#js-import)
 
 ## Steps
 
@@ -45,4 +46,17 @@ This doc contains the logs of the steps done to achieve the final result.
         "react-native": "*"
     }
 }
+```
+
+### <a name="js-import" />[[Native Component] Create the JS import](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. `mkdir colored-view/src`
+1. `touch colored-view/src/index.js`
+1. Paste the following content into the `index.js`
+```js
+// @flow
+
+import { requireNativeComponent } from 'react-native'
+
+export default requireNativeComponent("ColoredView")
 ```
