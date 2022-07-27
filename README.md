@@ -9,6 +9,7 @@
 * [[TurboModule] Set up CodeGen](#codegen)
 * [[TurboModule] Set up build.gradle](#android-gradle)
 * [[TurboModule] Set up podspec file](#ios-autolinking)
+* [[TurboModule] Update the Native iOS code](#ios-tm-code)
 
 ## Steps
 
@@ -348,3 +349,61 @@ end
         s.dependency "RCTTypeSafety"
         s.dependency "ReactCommon/turbomodule/core"
     end
+
+### <a name="ios-tm-code" />[[TurboModule] Update the Native iOS code](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. In the `ios/RNCalculator` folder, rename the `RNCalculator.m` into `RNCalculator.mm`
+1. Open it and replace its content with:
+    ```c++
+    #import "RNCalculator.h"
+    // Thanks to this guard, we won't import this header when we build for the old architecture.
+    #ifdef RCT_NEW_ARCH_ENABLED
+    #import "RNCalculatorSpec.h"
+    #endif
+
+    @implementation RNCalculator
+
+    RCT_EXPORT_MODULE()
+
+    RCT_REMAP_METHOD(add, addA:(NSInteger)a
+                            andB:(NSInteger)b
+                    withResolver:(RCTPromiseResolveBlock) resolve
+                    withRejecter:(RCTPromiseRejectBlock) reject)
+    {
+      return [self add:a b:b resolve:resolve reject:reject];
+    }
+
+    // Thanks to this guard, we won't compile this code when we build for the old architecture.
+    #ifdef RCT_NEW_ARCH_ENABLED
+    - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+        (const facebook::react::ObjCTurboModule::InitParams &)params
+    {
+        return std::make_shared<facebook::react::NativeCalculatorSpecJSI>(params);
+    }
+    #endif
+
+    - (void)add:(double)a b:(double)b resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+      NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+      resolve(result);
+    }
+
+    @end
+    ```
+1. Open the `ios/RNCalculator.h` file and replace its content with:
+    ```objc
+    #import <Foundation/Foundation.h>
+
+    #ifdef RCT_NEW_ARCH_ENABLED
+
+    #import <RNCalculatorSpec/RNCalculatorSpec.h>
+    @interface RNCalculator: NSObject <NativeCalculatorSpec>
+
+    #else
+
+    #import <React/RCTBridgeModule.h>
+    @interface RNCalculator : NSObject <RCTBridgeModule>
+
+    #endif
+
+    @end
+    ```
