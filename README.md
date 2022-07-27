@@ -11,6 +11,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Native Component] Test The Native Component](#test-old-architecture)
 * [[Fabric Component] Add the JavaScript specs](#fabric-specs)
 * [[Fabric Component] Set up CodeGen](#codegen)
+* [[Fabric Component] Update gradle](#update-gradle)
 
 ## Steps
 
@@ -351,3 +352,18 @@ end
         "jsSrcsDir": "src"
     }
     ```
+
+### <a name="update-gradle" />[[Fabric Component] Update gradle](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/703dbb72b0b9a56ebb2dbd8fc3235be1febc871b)
+
+1. Open the `example-component/android/build.gradle` file and update it as it follows:
+    1. At the beginning of the file, add the following lines:
+        ```diff
+        +   def isNewArchitectureEnabled() {
+        +       return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+        +   }
+        +
+        apply plugin: 'com.android.library'
+        +   if (isNewArchitectureEnabled()) {
+        +       apply plugin: 'com.facebook.react'
+        +   }
+        ```
