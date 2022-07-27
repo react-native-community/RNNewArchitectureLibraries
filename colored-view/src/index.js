@@ -1,5 +1,2 @@
 // @flow
-
-import { requireNativeComponent } from 'react-native'
-
-export default requireNativeComponent("ColoredView")
+export default require("./ColoredViewNativeComponent").default;
