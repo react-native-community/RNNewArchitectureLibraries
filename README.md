@@ -9,6 +9,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Native Component] Create the iOS implementation](#native-ios)
 * [[Native Component] Create the Android implementation](#native-android)
 * [[Native Component] Test The Native Component](#test-old-architecture)
+* [[Fabric Component] Add the JavaScript specs](#fabric-specs)
 
 ## Steps
 
@@ -315,3 +316,24 @@ end
 1. Play with the `color` property to see the View background color change
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
+
+### <a name="fabric-specs" />[[Fabric Component] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. `touch example-component/src/ColoredViewNativeComponent.js`
+1. Paste the following code:
+    ```ts
+    // @flow
+    import type {ViewProps} from 'react-native/Libraries/Components/View/ViewPropTypes';
+    import type {HostComponent} from 'react-native';
+    import { ViewStyle } from 'react-native';
+    import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+    type NativeProps = $ReadOnly<{|
+        ...ViewProps,
+        color: string
+    |}>;
+
+    export default (codegenNativeComponent<NativeProps>(
+        'ColoredView',
+    ): HostComponent<NativeProps>);
+    ```
