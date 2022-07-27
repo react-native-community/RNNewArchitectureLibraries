@@ -8,6 +8,7 @@
 * [[TurboModule] Add the JavaScript specs](#js-spec)
 * [[TurboModule] Set up CodeGen](#codegen)
 * [[TurboModule] Set up build.gradle](#android-gradle)
+* [[TurboModule] Set up podspec file](#ios-autolinking)
 
 ## Steps
 
@@ -322,3 +323,28 @@ end
     dependencies {
         implementation 'com.facebook.react:react-native:+'
     }
+
+### <a name="ios-autolinking" />[[TurboModule] Set up `podspec` file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Open the `calculator/calculator.podspec` file
+1. Before the `Pod::Spec.new do |s|` add the following code:
+    ```ruby
+    folly_version = '2021.07.22.00'
+    folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
+    ```
+1. Before the `end ` tag, add the following code
+    ```ruby
+    # This guard prevent to install the dependencies when we run `pod install` in the old architecture.
+    if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+        s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+        s.pod_target_xcconfig    = {
+            "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+            "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+        }
+
+        s.dependency "React-Codegen"
+        s.dependency "RCT-Folly", folly_version
+        s.dependency "RCTRequired"
+        s.dependency "RCTTypeSafety"
+        s.dependency "ReactCommon/turbomodule/core"
+    end
