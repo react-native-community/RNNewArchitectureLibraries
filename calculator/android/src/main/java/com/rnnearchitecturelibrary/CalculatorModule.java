@@ -10,13 +10,15 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class CalculatorModule extends ReactContextBaseJavaModule {
+    public static final String NAME = "Calculator";
+
     CalculatorModule(ReactApplicationContext context) {
         super(context);
     }
 
     @Override
     public String getName() {
-        return "RNCalculator";
+        return NAME;
     }
 
     @ReactMethod

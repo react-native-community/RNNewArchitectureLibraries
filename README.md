@@ -10,6 +10,7 @@
 * [[TurboModule] Set up build.gradle](#android-gradle)
 * [[TurboModule] Set up podspec file](#ios-autolinking)
 * [[TurboModule] Update the Native iOS code](#ios-tm-code)
+* [[TurboModule] Android: Convert ReactPackage to a backward compatible TurboReactPackage](#android-backward)
 
 ## Steps
 
@@ -406,4 +407,73 @@ end
     #endif
 
     @end
+    ```
+
+### <a name="android-backward" />[[TurboModule] Android: Convert ReactPackage to a backward compatible TurboReactPackage](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Open the `calculator/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModule.java` and modify it as it follows:
+    ```diff
+    public class CalculatorModule extends ReactContextBaseJavaModule {
+
+    +    public static final String NAME = "RNCalculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        public String getName() {
+    -       return "Calculator";
+    +       return NAME;
+        }
+    ```
+1. Open the `calculator/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorPackage.java` and replace its content with:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.Nullable;
+    import com.facebook.react.bridge.NativeModule;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.module.model.ReactModuleInfo;
+    import com.facebook.react.module.model.ReactModuleInfoProvider;
+    import com.facebook.react.TurboReactPackage;
+    import com.facebook.react.uimanager.ViewManager;
+
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.List;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class CalculatorPackage extends TurboReactPackage {
+
+        @Nullable
+        @Override
+        public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+            if (name.equals(CalculatorModule.NAME)) {
+                return new CalculatorModule(reactContext);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public ReactModuleInfoProvider getReactModuleInfoProvider() {
+            return () -> {
+                final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+                moduleInfos.put(
+                        CalculatorModule.NAME,
+                        new ReactModuleInfo(
+                                CalculatorModule.NAME,
+                                CalculatorModule.NAME,
+                                false, // canOverrideExistingModule
+                                false, // needsEagerInit
+                                true, // hasConstants
+                                false, // isCxxModule
+                                false // isTurboModule
+                ));
+                return moduleInfos;
+            };
+        }
+    }
     ```
