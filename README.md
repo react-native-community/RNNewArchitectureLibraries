@@ -17,6 +17,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Fabric Component] Android: Update the Native code to use two sourcesets](#android-sourceset)
 * [[Fabric Component] Android: Refactor the code to use a shared implementation](#android-refactor)
 * [[Fabric Component] Unify JavaScript interface](#unify-js)
+* [[Fabric Component] Test the Fabric Component](#test-fabric)
 
 ## Steps
 
@@ -734,3 +735,21 @@ end
     // @flow
     export default require("./ColoredViewNativeComponent").default;
     ```
+
+### <a name="test-fabric" />[[Fabric Component] Test the Fabric Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. At the same level of `colored-view` run `npx react-native init NewArchitecture --version 0.70.0-rc.2`
+1. `cd NewArchitecture && yarn add ../colored-view`
+1. If running on iOS, install the dependencies with `cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd ..`
+1. Open the `NewArchitecture/android/gradle.properties` and update them as it follows:
+    ```diff
+    - newArchEnabled=false
+    + newArchEnabled=true
+    ```
+1. Run the app:
+    1. For iOS: `npx react-native run-ios`
+    1. For Android: `npx react-native run-android`
+1. Open `NewArchitecture/App.js` file and replace the content with the same file used for the [`OldArchitecture`](#test-old-architecture).
+1. Play with the `color` property to see the View background color change
+
+**Note:** NewArchitecture app has not been committed not to pollute the repository.
