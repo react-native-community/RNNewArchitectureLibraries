@@ -1,6 +1,7 @@
 ## Table of contents
 
 * [[Setup] Create the calculator folder and the package.json](#setup)
+* [[Native Module] Create the JS import](#js-import)
 
 ## Steps
 
@@ -41,4 +42,16 @@
         "react-native": "*"
     }
 }
+```
+
+### <a name="js-import" />[[Native Module] Create the JS import](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. `mkdir calculator/src`
+1. `touch calculator/src/index.js`
+1. Paste the following content into the `index.js`
+```js
+// @flow
+import { NativeModules } from 'react-native'
+
+export default NativeModules.Calculator;
 ```
