@@ -13,6 +13,7 @@
 * [[TurboModule] Android: Convert ReactPackage to a backward compatible TurboReactPackage](#android-backward)
 * [[TurboModule] Android: Update the Native code to use two sourcesets](#android-sourceset)
 * [[TurboModule] Android: Refactor the code to use a shared implementation](#android-refactor)
+* [[TurboModule] Unify JavaScript interface](#js-unification)
 
 ## Steps
 
@@ -691,3 +692,12 @@ end
         }
     }
 1. Remove the `android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModule.java` (the one in the `main` folder).
+
+### <a name="js-unification" />[[TurboModule] Unify JavaScript interface](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Open the `src/index.js` file
+1. Replace the code with the following:
+    ```ts
+    // @flow
+    export default require("./NativeCalculator").default;
+    ```
