@@ -21,7 +21,7 @@ This doc contains the logs of the steps done to achieve the final result.
 
 ## Steps
 
-### <a name="setup" />[[Setup] Create the colored-view folder and the package.json](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="setup" />[[Setup] Create the colored-view folder and the package.json](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/a3b5177401f2c3463705ebe47fbf6ba65f7b083b)
 
 1. `mkdir colored-view`
 1. `touch colored-view/package.json`
@@ -60,7 +60,7 @@ This doc contains the logs of the steps done to achieve the final result.
 }
 ```
 
-### <a name="js-import" />[[Native Component] Create the JS import](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="js-import" />[[Native Component] Create the JS import](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/c050ff06146abffc057f41e75cec19433dd16006)
 
 1. `mkdir colored-view/src`
 1. `touch colored-view/src/index.js`
@@ -73,7 +73,7 @@ import { requireNativeComponent } from 'react-native'
 export default requireNativeComponent("ColoredView")
 ```
 
-### <a name="native-ios" />[[Native Component] Create the iOS implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="native-ios" />[[Native Component] Create the iOS implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/49dd9c630765f3fb43883cd7a4b0887ba93b2e6c)
 
 1. `mkdir colored-view/ios`
 1. Create a new file `ios/RNColoredViewManager.m` with the following code:
@@ -137,7 +137,7 @@ Pod::Spec.new do |s|
 end
 ```
 
-### <a name="native-android" />[[Native Component] Create the Android implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="native-android" />[[Native Component] Create the Android implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/6fbc8bf845abc07af90bd614c6107d4af52f7416)
 
 1. Create a folder `colored-view/android`
 1. Create the module `build.gradle` file `colored-view/android/build-gradle` and add this code:
@@ -280,7 +280,7 @@ end
     }
     ```
 
-### <a name="test-old-architecture" />[[Native Component] Test The Native Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="test-old-architecture" />[[Native Component] Test The Native Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/fa8cd97d8530a20941a1b1c53d708d06ab9340e9)
 
 1. At the same level of colored-view run `npx react-native init OldArchitecture --version 0.70.0-rc.0`
 1. `cd OldArchitecture && yarn add ../colored-view`
@@ -325,7 +325,7 @@ end
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
 
-### <a name="fabric-specs" />[[Fabric Component] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="fabric-specs" />[[Fabric Component] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/2aadc1098068a07276571aa2ad0f2ad4a8dd7cb3)
 
 1. `touch colored-view/src/ColoredViewNativeComponent.js`
 1. Paste the following code:
@@ -346,7 +346,7 @@ end
     ): HostComponent<NativeProps>);
     ```
 
-### <a name="ios-codegen" />[[Fabric Component] Set up CodeGen - iOS](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/7c5218a3a6966883c7b8b1faca618b76aeb46b3a)
+### <a name="ios-codegen" />[[Fabric Component] Set up CodeGen - iOS](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/bbde57e5e74b1d54cdbd03c1092c4c1744677c5d)
 
 1. Open the `colored-view/package.json`
 1. Add the following snippet at the end of it:
@@ -363,7 +363,7 @@ end
     }
     ```
 
-### <a name="android-codegen" />[[Fabric Component] Set up CodeGen - Android](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/703dbb72b0b9a56ebb2dbd8fc3235be1febc871b)
+### <a name="android-codegen" />[[Fabric Component] Set up CodeGen - Android](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/98d2f419b2226995b641fec8bfdaf79cfb2aaa95)
 
 1. Open the `colored-view/android/build.gradle` file and update it as it follows:
     1. At the beginning of the file, add the following lines:
@@ -388,7 +388,7 @@ end
         + }
         ```
 
-### <a name="ios-podspec" />[[Fabric Component] Set up `podspec` file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="ios-podspec" />[[Fabric Component] Set up `podspec` file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/a0d30fd5d49295cac9a398f8880d82db41d85b7a)
 
 1. Open the `colored-view/colored-view.podspec` file
 1. Before the `Pod::Spec.new do |s|` add the following code:
@@ -416,7 +416,7 @@ end
     end
     ```
 
-### <a name="fabric-ios">[[Fabric Component] Update the Native iOS code](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="fabric-ios">[[Fabric Component] Update the Native iOS code](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/ae7a8ad7f9d0c17357166408c0147602c7cba1c0)
 
 1. In the `colored-view/ios` folder, rename the `RNColoredViewManager.m` into `RNColoredViewManager.mm`
 1. Create a new header and call it `RNColoredView.h`
@@ -519,7 +519,7 @@ end
     #endif
     ```
 
-### <a name="android-sourceset" />[[Fabric Component] Android: Update the Native code to use two sourcesets](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="android-sourceset" />[[Fabric Component] Android: Update the Native code to use two sourcesets](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/54161039a9eb1438d11ae34810a44f24f025b8f2)
 
 1. Remove the file `colored-view/android/src/main/java/com/rnnewarchitecturelibrary/ColoredViewManager.java`.
 1. Open the `colored-view/android/build.gradle` file and add the following lines:
@@ -638,7 +638,7 @@ end
     }
     ```
 
-### <a name="android-refactor" />[[Fabric Component] Android: Refactor the code to use a shared implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="android-refactor" />[[Fabric Component] Android: Refactor the code to use a shared implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/70a252e7d5f07a6fc40e1bbb96454d66650a1744)
 
 1. Create a common implementation in `colored-view/android/src/main/java/com/rnnewarchitecturelibrary/ColoredViewManagerImpl.java` with the following code:
     ```java
@@ -742,7 +742,7 @@ end
     }
     ```
 
-### <a name="unify-js" />[[Fabric Component] Unify JavaScript interface](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="unify-js" />[[Fabric Component] Unify JavaScript interface](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/ec8a9d6c5934aa97e7717dfa4b300d6834286d74)
 
 1. Open the `src/index.js` file
 1. Replace the code with the following:
@@ -760,7 +760,7 @@ end
     export default coloredView;
     ```
 
-### <a name="test-fabric" />[[Fabric Component] Test the Fabric Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+### <a name="test-fabric" />[[Fabric Component] Test the Fabric Component](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/ad0ad6f1237a2d10e36191274e184200e11bfcfe)
 
 1. At the same level of `colored-view` run `npx react-native init NewArchitecture --version 0.70.0-rc.0`
 1. `cd NewArchitecture && yarn add ../colored-view`
