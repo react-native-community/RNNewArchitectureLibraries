@@ -16,6 +16,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Fabric Component] Update the Native iOS code](#fabric-ios)
 * [[Fabric Component] Android: Update the Native code to use two sourcesets](#android-sourceset)
 * [[Fabric Component] Android: Refactor the code to use a shared implementation](#android-refactor)
+* [[Fabric Component] Unify JavaScript interface](#unify-js)
 
 ## Steps
 
@@ -738,4 +739,22 @@ end
         }
 
     }
+    ```
+
+### <a name="unify-js" />[[Fabric Component] Unify JavaScript interface](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Open the `src/index.js` file
+1. Replace the code with the following:
+    ```ts
+    // @flow
+
+    import { requireNativeComponent } from 'react-native'
+
+    const isFabricEnabled = global.nativeFabricUIManager != null;
+
+    const coloredView = isFabricEnabled ?
+        require("./ColoredViewNativeComponent").default :
+        requireNativeComponent("ColoredView")
+
+    export default coloredView;
     ```

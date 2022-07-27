@@ -2,4 +2,10 @@
 
 import { requireNativeComponent } from 'react-native'
 
-export default requireNativeComponent("ColoredView")
+const isFabricEnabled = global.nativeFabricUIManager != null;
+
+const coloredView = isFabricEnabled ?
+    require("./ColoredViewNativeComponent").default :
+    requireNativeComponent("ColoredView")
+
+export default coloredView;
