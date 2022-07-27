@@ -4,6 +4,7 @@
 * [[Native Module] Create the JS import](#js-import)
 * [[Native Module] Create the iOS implementation](#ios-native)
 * [[Native Module] Create the Android implementation](#android-native)
+* [[Native Module] Test The Native Module](#test-native)
 
 ## Steps
 
@@ -219,3 +220,49 @@ end
 
     }
     ```
+
+### <a name="test-native" />[[Native Module] Test The Native Module](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. At the same level of calculator run `npx react-native init OldArchitecture --version 0.70.0-rc.2`
+1. `cd OldArchitecture && yarn add ../calculator`
+1. Open `OldArchitecture/App.js` file and replace the content with:
+    ```js
+    /**
+     * Sample React Native App
+     * https://github.com/facebook/react-native
+     *
+     * @format
+     * @flow strict-local
+     */
+    import React from 'react';
+    import {useState} from "react";
+    import type {Node} from 'react';
+    import {
+    SafeAreaView,
+    StatusBar,
+    Text,
+    Button,
+    } from 'react-native';
+    import RNCalculator from 'calculator/src/index'
+    const App: () => Node = () => {
+    const [currentResult, setResult] = useState<number | null>(null);
+    return (
+        <SafeAreaView>
+        <StatusBar barStyle={'dark-content'}/>
+        <Text style={{marginLeft:20, marginTop:20}}>3+7={currentResult ?? "??"}</Text>
+        <Button title="Compute" onPress={async () => {
+            const result = await RNCalculator.add(3, 7);
+            setResult(result);
+        }} />
+        </SafeAreaView>
+    );
+    };
+    export default App;
+    ```
+1. To run the App on iOS, install the dependencies: `cd ios && bundle install && bundle exec pod install && cd ..`
+1. Run the app
+    1. if using iOS: `npx react-native run-ios`
+    1. if using Android: `npx react-native run-android`
+1. Click on the `Compute` button and see the app working
+
+**Note:** OldArchitecture app has not been committed not to pollute the repository.
