@@ -14,6 +14,7 @@
 * [[TurboModule] Android: Update the Native code to use two sourcesets](#android-sourceset)
 * [[TurboModule] Android: Refactor the code to use a shared implementation](#android-refactor)
 * [[TurboModule] Unify JavaScript interface](#js-unification)
+* [[TurboModule] Test the Turbomodule](#tm-test)
 
 ## Steps
 
@@ -701,3 +702,21 @@ end
     // @flow
     export default require("./NativeCalculator").default;
     ```
+
+### <a name="tm-test" />[[TurboModule] Test the Turbomodule]()
+
+1. At the same level of calculator run `npx react-native init NewArchitecture --version 0.70.0-rc.2`
+1. `cd NewArchitecture && yarn add ../calculator`
+1. Open `NewArchitecture/App.js` file and replace the content with the same file used for the [`OldArchitecture`](#test-old-architecture).
+1. To run the App on iOS, install the dependencies: `cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd ..`
+1. Open the `NewArchitecture/android/gradle.properties` and update them as it follows:
+    ```diff
+    - newArchEnabled=false
+    + newArchEnabled=true
+    ```
+1. Run the app:
+    1. iOS: `npx react-native run-ios`
+    1. Android `npx react-native run-android`
+1. Click on the `Compute` button and see the app working
+
+**Note:** NewArchitecture app has not been committed not to pollute the repository.
