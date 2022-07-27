@@ -5,6 +5,7 @@
 * [[Native Module] Create the iOS implementation](#ios-native)
 * [[Native Module] Create the Android implementation](#android-native)
 * [[Native Module] Test The Native Module](#test-native)
+* [[TurboModule] Add the JavaScript specs](#js-spec)
 
 ## Steps
 
@@ -266,3 +267,21 @@ end
 1. Click on the `Compute` button and see the app working
 
 **Note:** OldArchitecture app has not been committed not to pollute the repository.
+
+### <a name="js-spec" />[[TurboModule] Add the JavaScript specs](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. `touch calculator/src/NativeCalculator.js`
+1. Paste the following code:
+    ```ts
+    // @flow
+    import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
+    import { TurboModuleRegistry } from 'react-native';
+
+    export interface Spec extends TurboModule {
+        // your module methods go here, for example:
+        add(a: number, b: number): Promise<number>;
+    }
+    export default (TurboModuleRegistry.get<Spec>(
+        'RNCalculator'
+    ): ?Spec);
+    ```
