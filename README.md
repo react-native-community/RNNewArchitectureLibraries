@@ -2,6 +2,7 @@
 
 * [[Setup] Create the calculator folder and the package.json](#setup)
 * [[Native Module] Create the JS import](#js-import)
+* [[Native Module] Create the iOS implementation](#ios-native)
 
 ## Steps
 
@@ -54,4 +55,59 @@
 import { NativeModules } from 'react-native'
 
 export default NativeModules.Calculator;
+```
+
+### <a name="ios-native" />[[Native Module] Create the iOS implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. `mkdir calculator/ios`
+1. Create an `ios/RNCalculator.h` file and fill it with the following code:
+    ```objc
+    #import <Foundation/Foundation.h>
+    #import <React/RCTBridgeModule.h>
+
+    @interface RNCalculator : NSObject <RCTBridgeModule>
+
+    @end
+    ```
+1. Create an `ios/RNCalculator.m` file and replace the code with the following:
+    ```objective-c
+    #import "RNCalculator.h"
+
+    @implementation RNCalculator
+
+    RCT_EXPORT_MODULE()
+
+    RCT_REMAP_METHOD(add, addA:(NSInteger)a
+                            andB:(NSInteger)b
+                    withResolver:(RCTPromiseResolveBlock) resolve
+                    withRejecter:(RCTPromiseRejectBlock) reject)
+    {
+        NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+        resolve(result);
+    }
+
+    @end
+    ```
+1. In the `calculator` folder, create a `calculator.podspec` file
+1. Copy this code in the `podspec` file
+```ruby
+require "json"
+
+package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+
+Pod::Spec.new do |s|
+  s.name            = "calculator"
+  s.version         = package["version"]
+  s.summary         = package["description"]
+  s.description     = package["description"]
+  s.homepage        = package["homepage"]
+  s.license         = package["license"]
+  s.platforms       = { :ios => "11.0" }
+  s.author          = package["author"]
+  s.source          = { :git => package["repository"], :tag => "#{s.version}" }
+
+  s.source_files    = "ios/**/*.{h,m,mm,swift}"
+
+  s.dependency "React-Core"
+end
 ```
