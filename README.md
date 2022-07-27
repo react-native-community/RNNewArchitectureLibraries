@@ -12,6 +12,7 @@
 * [[TurboModule] Update the Native iOS code](#ios-tm-code)
 * [[TurboModule] Android: Convert ReactPackage to a backward compatible TurboReactPackage](#android-backward)
 * [[TurboModule] Android: Update the Native code to use two sourcesets](#android-sourceset)
+* [[TurboModule] Android: Refactor the code to use a shared implementation](#android-refactor)
 
 ## Steps
 
@@ -587,3 +588,106 @@ end
         }
     }
     ```
+
+### <a name="android-refactor" />[[TurboModule] Android: Refactor the code to use a shared implementation](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Create a new `calculator/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModuleImpl.java` file (notice that the `src`'s subfolder is now `main`) and paste the following code:
+    ```java
+    package com.rnnewarchitecturelibrary;
+
+    import androidx.annotation.NonNull;
+    import com.facebook.react.bridge.Promise;
+    import java.util.Map;
+    import java.util.HashMap;
+
+    public class CalculatorModuleImpl {
+
+        public static final String NAME = "RNCalculator";
+
+        public static void add(double a, double b, Promise promise) {
+            promise.resolve(a + b);
+        }
+
+    }
+    ```
+1. Open the `calculator/android/src/main/java/com/rnnewarchitecturelibrary/CalculatorPackage.java` file and update the following lines:
+    ```diff
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+    -    if (name.equals(CalculatorModule.NAME)) {
+    +    if (name.equals(CalculatorModuleImpl.NAME)) {
+            return new CalculatorModule(reactContext);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return () -> {
+            final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+            moduleInfos.put(
+    -                CalculatorModule.NAME,
+    +                CalculatorModuleImpl.NAME,
+                    new ReactModuleInfo(
+    -                        CalculatorModule.NAME,
+    -                        CalculatorModule.NAME,
+    +                        CalculatorModuleImpl.NAME,
+    +                        CalculatorModuleImpl.NAME,
+                            false, // canOverrideExistingModule
+                            false, // needsEagerInit
+                            true, // hasConstants
+                            false, // isCxxModule
+                            isTurboModule // isTurboModule
+            ));
+            return moduleInfos;
+        };
+    }
+    ```
+1. Open the `calculator/android/src/newarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` file and update it as it follows:
+    ```diff
+    public class CalculatorModule extends NativeCalculatorSpec {
+
+    -    public static final String NAME = "RNCalculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        @NonNull
+        public String getName() {
+    -        return NAME;
+    +        return CalculatorModuleImpl.NAME;
+        }
+
+        @Override
+        public void add(double a, double b, Promise promise) {
+    -        promise.resolve(a + b);
+    +        CalculatorModuleImpl.add(a, b, promise);
+        }
+    }
+    ```
+1. Open the `calculator/android/src/oldarch/java/com/rnnewarchitecturelibrary/CalculatorModule.java` and update it as it follows:
+    ```diff
+    public class CalculatorModule extends ReactContextBaseJavaModule {
+
+    -    public static final String NAME = "RNCalculator";
+
+        CalculatorModule(ReactApplicationContext context) {
+            super(context);
+        }
+
+        @Override
+        public String getName() {
+    -        return NAME;
+    +        return CalculatorModuleImpl.NAME;
+        }
+
+        @ReactMethod
+        public void add(int a, int b, Promise promise) {
+    -        promise.resolve(a + b);
+    +        CalculatorModuleImpl.add(a, b, promise);
+        }
+    }
+1. Remove the `android/src/main/java/com/rnnewarchitecturelibrary/CalculatorModule.java` (the one in the `main` folder).
