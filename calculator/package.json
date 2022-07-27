@@ -27,5 +27,13 @@
     "peerDependencies": {
         "react": "*",
         "react-native": "*"
+    },
+    "codegenConfig": {
+        "name": "RNCalculatorSpec",
+        "type": "modules",
+        "jsSrcsDir": "src",
+        "android": {
+            "javaPackageName": "com.rnnewarchitecturelibrary"
+        }
     }
 }
