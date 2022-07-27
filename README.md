@@ -12,6 +12,7 @@ This doc contains the logs of the steps done to achieve the final result.
 * [[Fabric Component] Add the JavaScript specs](#fabric-specs)
 * [[Fabric Component] Set up CodeGen](#codegen)
 * [[Fabric Component] Update gradle](#update-gradle)
+* [[Fabric Component] Set up `podspec` file](#ios-podspec)
 
 ## Steps
 
@@ -355,7 +356,7 @@ end
 
 ### <a name="update-gradle" />[[Fabric Component] Update gradle](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/703dbb72b0b9a56ebb2dbd8fc3235be1febc871b)
 
-1. Open the `example-component/android/build.gradle` file and update it as it follows:
+1. Open the `colored-view/android/build.gradle` file and update it as it follows:
     1. At the beginning of the file, add the following lines:
         ```diff
         +   def isNewArchitectureEnabled() {
@@ -367,3 +368,30 @@ end
         +       apply plugin: 'com.facebook.react'
         +   }
         ```
+
+### <a name="ios-podspec" />[[Fabric Component] Set up `podspec` file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/)
+
+1. Open the `colored-view/colored-view.podspec` file
+1. Before the `Pod::Spec.new do |s|` add the following code:
+    ```ruby
+    folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
+    ```
+1. Before the `end ` tag, add the following code
+    ```ruby
+    # This guard prevent to install the dependencies when we run `pod install` in the old architecture.
+    if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+        s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+        s.pod_target_xcconfig    = {
+            "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+            "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+            "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+        }
+
+        s.dependency "React-RCTFabric"
+        s.dependency "React-Codegen"
+        s.dependency "RCT-Folly"
+        s.dependency "RCTRequired"
+        s.dependency "RCTTypeSafety"
+        s.dependency "ReactCommon/turbomodule/core"
+    end
+    ```
