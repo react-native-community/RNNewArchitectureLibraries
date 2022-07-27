@@ -30,6 +30,7 @@ public class CalculatorPackage extends TurboReactPackage {
     public ReactModuleInfoProvider getReactModuleInfoProvider() {
         return () -> {
             final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
             moduleInfos.put(
                     CalculatorModule.NAME,
                     new ReactModuleInfo(
@@ -39,7 +40,7 @@ public class CalculatorPackage extends TurboReactPackage {
                             false, // needsEagerInit
                             true, // hasConstants
                             false, // isCxxModule
-                            false // isTurboModule
+                            isTurboModule // isTurboModule
             ));
             return moduleInfos;
         };

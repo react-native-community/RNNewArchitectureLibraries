@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class CalculatorModule extends ReactContextBaseJavaModule {
-    public static final String NAME = "Calculator";
+
+    public static final String NAME = "RNCalculator";
 
     CalculatorModule(ReactApplicationContext context) {
         super(context);
