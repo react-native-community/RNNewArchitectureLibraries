@@ -393,7 +393,6 @@ end
 1. Open the `colored-view/colored-view.podspec` file
 1. Before the `Pod::Spec.new do |s|` add the following code:
     ```ruby
-    folly_version = '2021.07.22.00'
     folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
     ```
 1. Before the `end ` tag, add the following code
@@ -409,7 +408,7 @@ end
 
         s.dependency "React-RCTFabric"
         s.dependency "React-Codegen"
-        s.dependency "RCT-Folly", folly_version
+        s.dependency "RCT-Folly"
         s.dependency "RCTRequired"
         s.dependency "RCTTypeSafety"
         s.dependency "ReactCommon/turbomodule/core"
