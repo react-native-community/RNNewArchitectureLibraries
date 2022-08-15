@@ -13,6 +13,7 @@ Then, you will move that code to the Fabric Component and you will disable the C
 * [[App] Add the Fabric Component to the app and generate the code](#codegen)
 * [[Fabric Component] Move the Codegen'd code from app to library](#move-codegen)
 * [[Fabric Component] Remove the codegenConfig from the package.json](#remove-codegen)
+* [[App] Cleanup App Build](#cleanup-build)
 
 ## Steps
 
@@ -85,3 +86,9 @@ export default App;
 
 1. Open the `colored-view/package.json`
 2. Remove the `codegenConfig` field from the file
+
+### [[App] Cleanup App Build](#cleanup-build)
+
+1. `rm -rf NewArchitecture/ios/build`
+2. `cd NewArchitecture && yarn add ../colored-view`
+3. `cd ios && rm -rf build`
