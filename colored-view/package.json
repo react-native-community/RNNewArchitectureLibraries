@@ -27,10 +27,5 @@
     "peerDependencies": {
         "react": "*",
         "react-native": "*"
-    },
-    "codegenConfig": {
-        "name": "RNColoredViewSpec",
-        "type": "components",
-        "jsSrcsDir": "src"
     }
 }

@@ -12,6 +12,7 @@ Then, you will move that code to the Fabric Component and you will disable the C
 * [[App] Create an app using the latest template](#create-app)
 * [[App] Add the Fabric Component to the app and generate the code](#codegen)
 * [[Fabric Component] Move the Codegen'd code from app to library](#move-codegen)
+* [[Fabric Component] Remove the codegenConfig from the package.json](#remove-codegen)
 
 ## Steps
 
@@ -79,3 +80,8 @@ export default App;
 4. Go to the `NewArchitecture/node_modules/colored-view/android/build/generated/source/codegen`
 5. Copy the content of `java/com` folder and paste it into the `colored-view/android/src/newarch/java/com`
 6. Copy the content of `jni` folder and paste it intp the `colored-view/android/src/newarch/jni`
+
+### [[Fabric Component] Remove the codegenConfig from the package.json]()
+
+1. Open the `colored-view/package.json`
+2. Remove the `codegenConfig` field from the file
