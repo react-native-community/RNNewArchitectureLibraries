@@ -11,6 +11,7 @@ Then, you will move that code to the Fabric Component and you will disable the C
 * [[Setup] Use the colored-view from other branch](#colored-view)
 * [[App] Create an app using the latest template](#create-app)
 * [[App] Add the Fabric Component to the app and generate the code](#codegen)
+* [[Fabric Component] Move the Codegen'd code from app to library](#move-codegen)
 
 ## Steps
 
@@ -69,3 +70,12 @@ return (
 
 export default App;
 ```
+
+### [[Fabric Component] Move the Codegen'd code from app to library]()
+
+1. Go to the `NewArchitecture/ios/build/generated/ios` folder.
+2. Copy the `react/renderer/components/RNColoredViewSpec` folder.
+3. Paste it in the `colored-view/ios` folder.
+4. Go to the `NewArchitecture/node_modules/colored-view/android/build/generated/source/codegen`
+5. Copy the content of `java/com` folder and paste it into the `colored-view/android/src/newarch/java/com`
+6. Copy the content of `jni` folder and paste it intp the `colored-view/android/src/newarch/jni`
