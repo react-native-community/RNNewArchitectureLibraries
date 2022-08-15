@@ -1,0 +1,36 @@
+{
+    "name": "colored-view",
+    "version": "0.0.1",
+    "description": "Showcase Fabric component with backward compatibility",
+    "react-native": "src/index",
+    "source": "src/index",
+    "files": [
+        "src",
+        "android",
+        "ios",
+        "colored-view.podspec",
+        "!android/build",
+        "!ios/build",
+        "!**/__tests__",
+        "!**/__fixtures__",
+        "!**/__mocks__"
+    ],
+    "keywords": ["react-native", "ios", "android"],
+    "repository": "https://github.com/<your_github_handle>/colored-view",
+    "author": "<Your Name> <your_email@your_provider.com> (https://github.com/<your_github_handle>)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/<your_github_handle>/colored-view/issues"
+    },
+    "homepage": "https://github.com/<your_github_handle>/colored-view#readme",
+    "devDependencies": {},
+    "peerDependencies": {
+        "react": "*",
+        "react-native": "*"
+    },
+    "codegenConfig": {
+        "name": "RNColoredViewSpec",
+        "type": "components",
+        "jsSrcsDir": "src"
+    }
+}
