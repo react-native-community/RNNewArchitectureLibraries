@@ -15,6 +15,7 @@ Then, you will move that code to the Fabric Component and you will disable the C
 * [[Fabric Component] Remove the codegenConfig from the package.json](#remove-codegen)
 * [[App] Cleanup App Build](#cleanup-build)
 * [[App] Make it work for iOS](#ios)
+* [[App] Make it work for Android](#android)
 
 ## Steps
 
@@ -127,3 +128,23 @@ export default App;
     }
     ```
 11. Build and run the app
+
+* [[App] Make it work for Android]()
+
+1. Open the `colored-view/android/build.gradle` file
+1. Remove the following lines:
+  ```diff
+  apply plugin: 'com.android.library'
+
+  - if (isNewArchitectureEnabled()) {
+  -    apply plugin: 'com.facebook.react'
+  - }
+  ```
+1. `cd ../../NewArchitecture`
+1. `yarn install ../colored-view`
+1. `npx react-native run-android`
+1. Once it fails, go to `node_modules/colored-view/android` and delete the build folder
+1. From the `NewArchitecture` root folder, run `cd android`
+1. `./gradlew :app:installDebug -PreactNativeArcitectures=arm64-v8a -x generateCodegenArtifactsFromSchema`
+
+**NOTE:** Due to a bug in the Codegen, you currently need to tell to Gradle not to run the Codegen
