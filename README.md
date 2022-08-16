@@ -14,6 +14,7 @@ Then, you will move that code to the Fabric Component and you will disable the C
 * [[Fabric Component] Move the Codegen'd code from app to library](#move-codegen)
 * [[Fabric Component] Remove the codegenConfig from the package.json](#remove-codegen)
 * [[App] Cleanup App Build](#cleanup-build)
+* [[App] Make it work for iOS](#ios)
 
 ## Steps
 
@@ -92,3 +93,37 @@ export default App;
 1. `rm -rf NewArchitecture/ios/build`
 2. `cd NewArchitecture && yarn add ../colored-view`
 3. `cd ios && rm -rf build`
+
+### [[App] Make it work for iOS](#ios)
+
+1. Update the `colored-view.podspec` to include also the cpp files
+  ```diff
+  - s.source_files    = "ios/**/*.{h,m,mm,swift}"
+  + s.source_files    = "ios/**/*.{h,m,mm,cpp,swift}"
+  ```
+2. Open the files in the `react/renderer/components/RNColoredViewSpec`
+3. Remove the `react/renderer/components/RNColoredViewSpec/` from the various `#include` directive. **Note:** Just remove the prefix from the `RNColoredViewSpec` only!
+4. Open the `RNColoredView.mm` and remove the `react/renderer/components/RNColoredViewSpec/` from the 4 `#imports`
+5. `cd NewArchitecture`
+6. `yarn add ../colored-view`
+7. `cd ios`
+8. `RCT_NEW_ARCH_ENABLED=1 bundle exec pod install`
+9. Open the `NewArchitecture/ios/AppDelegate.mm`
+10. Add the following statements:
+    ```diff
+    #import <React/RCTSurfacePresenterBridgeAdapter.h>
+    #import <ReactCommon/RCTTurboModuleManager.h>
+    + #import <React/RCTComponentViewFactory.h>
+    + #import <RNColoredView.h>
+
+    // ...
+
+    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+    {
+      //...
+
+    +  [RCTComponentViewFactory.currentComponentViewFactory registerComponentViewClass:RNColoredView.class];
+      return YES;
+    }
+    ```
+11. Build and run the app

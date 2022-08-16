@@ -2,10 +2,10 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNColoredView.h"
 
-#import <react/renderer/components/RNColoredViewSpec/ComponentDescriptors.h>
-#import <react/renderer/components/RNColoredViewSpec/EventEmitters.h>
-#import <react/renderer/components/RNColoredViewSpec/Props.h>
-#import <react/renderer/components/RNColoredViewSpec/RCTComponentViewHelpers.h>
+#import <ComponentDescriptors.h>
+#import <EventEmitters.h>
+#import <Props.h>
+#import <RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
 

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <react/renderer/components/RNColoredViewSpec/Props.h>
+#include <Props.h>
 #include <react/renderer/components/view/ConcreteViewShadowNode.h>
 #include <jsi/jsi.h>
 
