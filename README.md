@@ -7,6 +7,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 ## Table of Content
 
 * [[Setup] Create the image-component folder and the package.json](#setup)
+* [[Fabric Component] Create the TS specs](#ts-specs)
 
 ## Steps
 
@@ -47,4 +48,25 @@ Loading images on **Android** is done with Fresco, so the android component won'
         "react-native": "*"
     }
 }
+```
+
+### <a name="ts-import" />[[Fabric Component] Create the TS specs]()
+
+1. `mkdir image-component/src`
+1. `touch image-component/src/ImageComponentNativeComponent.ts`
+1. Paste the following content into the `ImageComponentNativeComponent.ts`
+```ts
+import type { ViewProps } from 'ViewPropTypes';
+import type { HostComponent } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+import type {ImageSource} from 'react-native/Libraries/Image';
+
+export interface NativeProps extends ViewProps {
+  image?: ImageSource;
+  // add other props here
+}
+
+export default codegenNativeComponent<NativeProps>(
+  'RTNImageComponent'
+) as HostComponent<NativeProps>;
 ```
