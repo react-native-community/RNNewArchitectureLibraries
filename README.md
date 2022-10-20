@@ -8,6 +8,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 
 * [[Setup] Create the image-component folder and the package.json](#setup)
 * [[Fabric Component] Create the TS specs](#ts-specs)
+* [[Fabric Component] Setup Codegen](#codegen)
 
 ## Steps
 
@@ -69,4 +70,16 @@ export interface NativeProps extends ViewProps {
 export default codegenNativeComponent<NativeProps>(
   'RTNImageComponent'
 ) as HostComponent<NativeProps>;
+```
+
+### <a name="codegen">[[Fabric Component] Setup Codegen]()
+
+1. Open the `image-component/package.json`
+2. Add the following snippet at the end of it:
+```json
+"codegenConfig": {
+    "name": "RTNImageViewSpec",
+    "type": "all",
+    "jsSrcsDir": "src"
+}
 ```
