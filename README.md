@@ -11,7 +11,8 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Setup Codegen](#codegen)
 * [[Fabric Componenr] Create the podspec for iOS](#ios-podspec)
 * [[Fabric Component] Create the Basic Component](#ios-basic)
-* [[Fabric Component] Configure podspec and package.json to work with custom C++ Files](ios-cxx-podspec)
+* [[Fabric Component] Configure podspec and package.json to work with custom C++ Files](#ios-cxx-podspec)
+* [[Fabric Component] Implement Cxx state](#ios-cxx-advanced)
 
 ## Steps
 
@@ -245,3 +246,233 @@ end
 +       "cxx",
         "example-component.podspec",
 ```
+
+### <a name="ios-cxx-advanced" />[[Fabric Component] Implement Cxx state]()
+
+**Note: In this section we are going to add a bunch of C++ code. This contains the custom logic of your component, that's why React NAtive can't generate it automatically for your app.**
+
+* In the cxx folder, create a new `RTNImageComponentCustomNativeState.h` file
+  ```cpp
+    #pragma once
+
+    #ifdef ANDROID
+    #include <folly/dynamic.h>
+    #include <react/renderer/mapbuffer/MapBuffer.h>
+    #include <react/renderer/mapbuffer/MapBufferBuilder.h>
+    #endif
+
+    #include <react/renderer/imagemanager/ImageRequest.h>
+    #include <react/renderer/imagemanager/primitives.h>
+
+    namespace facebook {
+    namespace react {
+
+    /*
+    * State for <Slider> component.
+    */
+    class RTNImageComponentCustomNativeState final {
+    public:
+    RTNImageComponentCustomNativeState(
+        ImageSource const &imageSource,
+        ImageRequest imageRequest)
+        : imageSource_(imageSource),
+            imageRequest_(
+                std::make_shared<ImageRequest>(std::move(imageRequest))){};
+
+    RTNImageComponentCustomNativeState() = default;
+
+    ImageSource getImageSource() const;
+    ImageRequest const &getImageRequest() const;
+
+    #ifdef ANDROID
+    SliderState(RTNImageComponentCustomNativeState const &previousState, folly::dynamic data){};
+
+    /*
+    * Empty implementation for Android because it doesn't use this class.
+    */
+    folly::dynamic getDynamic() const {
+        return {};
+    };
+    MapBuffer getMapBuffer() const {
+        return MapBufferBuilder::EMPTY();
+    };
+    #endif
+
+    private:
+    ImageSource imageSource_;
+    std::shared_ptr<ImageRequest> imageRequest_;
+    };
+
+    } // namespace react
+    } // namespace facebook
+  ```
+* In the cxx folder, create a new `RTNImageComponentCustomNativeState.cpp` file
+  ```cpp
+    #include "RTNImageComponentCustomNativeState.h"
+
+    namespace facebook::react {
+
+    ImageSource RTNImageComponentCustomNativeState::getImageSource() const {
+        return imageSource_;
+    }
+
+    ImageRequest const &RTNImageComponentCustomNativeState::getImageRequest() const {
+        return *imageRequest_;
+    }
+
+    } // namespace facebook::react
+  ```
+* In the cxx folder, create a new `RTNImageComponentCustomShadowNode.h` file
+  ```cpp
+    #pragma once
+    #include "RTNImageComponentCustomNativeState.h"
+
+    #include <jsi/jsi.h>
+    #include <react/renderer/components/RTNImageViewSpec/EventEmitters.h>
+    #include <react/renderer/components/RTNImageViewSpec/Props.h>
+    #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+
+    #include <react/renderer/imagemanager/ImageManager.h>
+    #include <react/renderer/imagemanager/primitives.h>
+
+    namespace facebook {
+    namespace react {
+
+    JSI_EXPORT extern const char RTNImageComponentComponentName[];
+
+    /*
+    * `ShadowNode` for <Slider> component.
+    */
+    class RTNImageComponentCustomShadowNode final
+        : public ConcreteViewShadowNode<
+            RTNImageComponentComponentName,
+            RTNImageComponentProps,
+            RTNImageComponentEventEmitter,
+            RTNImageComponentCustomNativeState> {
+    public:
+    using ConcreteViewShadowNode::ConcreteViewShadowNode;
+
+    // Associates a shared `ImageManager` with the node.
+    void setImageManager(const SharedImageManager &imageManager);
+
+    static RTNImageComponentCustomNativeState initialStateData(
+        ShadowNodeFragment const &fragment,
+        ShadowNodeFamilyFragment const &familyFragment,
+        ComponentDescriptor const &componentDescriptor) {
+        auto imageSource = ImageSource{ImageSource::Type::Invalid};
+        return {imageSource, {imageSource, nullptr}};
+    }
+
+    #pragma mark - LayoutableShadowNode
+
+    void layout(LayoutContext layoutContext) override;
+
+    private:
+    void updateStateIfNeeded();
+
+    ImageSource getImageSource() const;
+
+    SharedImageManager imageManager_;
+    };
+
+    } // namespace react
+    } // namespace facebook
+  ```
+* In the cxx folder, create a new `RTNImageComponentCustomShadowNode.cpp` file
+  ```cpp
+    #include "RTNImageComponentCustomShadowNode.h"
+
+    #include <react/renderer/core/LayoutContext.h>
+
+    namespace facebook {
+    namespace react {
+
+    extern const char RTNImageComponentComponentName[] =
+        "RTNImageComponent";
+
+    void RTNImageComponentCustomShadowNode::setImageManager(
+        const SharedImageManager &imageManager) {
+        ensureUnsealed();
+        imageManager_ = imageManager;
+    }
+
+    void RTNImageComponentCustomShadowNode::updateStateIfNeeded() {
+        const auto &newImageSource = getImageSource();
+
+        auto const &currentState = getStateData();
+
+        auto imageSource = currentState.getImageSource();
+
+        bool anyChanged = newImageSource != imageSource;
+
+        if (!anyChanged) {
+            return;
+        }
+
+        // Now we are about to mutate the Shadow Node.
+        ensureUnsealed();
+
+        // It is not possible to copy or move image requests from SliderLocalData,
+        // so instead we recreate any image requests (that may already be in-flight?)
+        // TODO: check if multiple requests are cached or if it's a net loss
+        auto state = RTNImageComponentCustomNativeState{
+            newImageSource,
+            imageManager_->requestImage(newImageSource, getSurfaceId())};
+        setStateData(std::move(state));
+    }
+
+    ImageSource RTNImageComponentCustomShadowNode::getImageSource()
+        const {
+        return getConcreteProps().image;
+    }
+
+    void RTNImageComponentCustomShadowNode::layout(
+        LayoutContext layoutContext) {
+        updateStateIfNeeded();
+        ConcreteViewShadowNode::layout(layoutContext);
+    }
+
+    } // namespace react
+    } // namespace facebook
+  ```
+* In the `cxx/react/renderer/components/RTNImageViewSpec` folder, create a new `ComponentDescriptors.h` file
+  ```cpp
+    #include <react/renderer/core/ConcreteComponentDescriptor.h>
+    #include "RTNImageComponentCustomShadowNode.h"
+
+    namespace facebook {
+    namespace react {
+
+    /*
+    * Descriptor for <RTNImageComponentCustomComponentDescriptor>
+    * component.
+    */
+    class RTNImageComponentCustomComponentDescriptor final
+        : public ConcreteComponentDescriptor<
+            RTNImageComponentCustomShadowNode> {
+    public:
+    RTNImageComponentCustomComponentDescriptor(
+        ComponentDescriptorParameters const &parameters)
+        : ConcreteComponentDescriptor(parameters),
+            imageManager_(std::make_shared<ImageManager>(contextContainer_)) {}
+
+    void adopt(ShadowNode::Unshared const &shadowNode) const override {
+        ConcreteComponentDescriptor::adopt(shadowNode);
+
+        auto compShadowNode =
+            std::static_pointer_cast<RTNImageComponentCustomShadowNode>(
+                shadowNode);
+
+        // `RTNImageComponentCustomShadowNode` uses `ImageManager` to
+        // initiate image loading and communicate the loading state
+        // and results to mounting layer.
+        compShadowNode->setImageManager(imageManager_);
+    }
+
+    private:
+    const SharedImageManager imageManager_;
+    };
+
+    } // namespace react
+    } // namespace facebook
+  ```
