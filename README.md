@@ -10,6 +10,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Create the TS specs](#ts-specs)
 * [[Fabric Component] Setup Codegen](#codegen)
 * [[Fabric Componenr] Create the podspec for iOS](#ios-podspec)
+* [[Fabric Component] Create the Basic Component](#ios-basic)
 
 ## Steps
 
@@ -85,7 +86,7 @@ export default codegenNativeComponent<NativeProps>(
 }
 ```
 
-### <a name="ios-podspec" />[[Fabric Componenr] Create the podspec for iOS]()
+### <a name="ios-podspec" />[[Fabric Component] Create the podspec for iOS]()
 
 * Create a `image-component.podspec` file
 * Paste the following content into it:
@@ -111,3 +112,116 @@ Pod::Spec.new do |s|
   install_modules_dependencies(s)
 end
 ```
+
+### <a name="ios-basic" />[[Fabric Component] Create the Basic Component]()
+
+* Create the `ios` folder as sibling of the `src` one
+* Add the `RTNImageComponentViewManager.mm` file
+    ```cpp
+    #import <React/RCTLog.h>
+    #import <React/RCTUIManager.h>
+    #import <React/RCTViewManager.h>
+
+    @interface RTNImageComponentViewManager : RCTViewManager
+    @end
+
+    @implementation RTNImageComponentViewManager
+
+    RCT_EXPORT_MODULE(RTNImageComponent)
+
+    RCT_EXPORT_VIEW_PROPERTY(image, UIImage *)
+
+    @end
+    ```
+* Create the `RTNImageComponentView.h`
+    ```cpp
+    #import <React/RCTViewComponentView.h>
+    #import <UIKit/UIKit.h>
+
+    NS_ASSUME_NONNULL_BEGIN
+
+    @interface RTNImageComponentView : RCTViewComponentView
+
+    @end
+
+    NS_ASSUME_NONNULL_END
+    ```
+* Create the `RTNImageComponentView.mm`
+    ```cpp
+    #import "RTNImageComponentView.h"
+
+    #import <react/renderer/components/RTNImageViewSpec/ComponentDescriptors.h>
+    #import <react/renderer/components/RTNImageViewSpec/EventEmitters.h>
+    #import <react/renderer/components/RTNImageViewSpec/Props.h>
+    #import <react/renderer/components/RTNImageViewSpec/RCTComponentViewHelpers.h>
+
+    #import "RCTFabricComponentsPlugins.h"
+
+    using namespace facebook::react;
+
+    @interface RTNImageComponentView () <RCTRTNImageComponentViewProtocol>
+    @end
+
+    @implementation RTNImageComponentView {
+    UIView *_view;
+    UIImageView *_imageView;
+    UIImage *_image;
+    }
+
+    + (ComponentDescriptorProvider)componentDescriptorProvider
+    {
+    return concreteComponentDescriptorProvider<RTNImageComponentComponentDescriptor>();
+    }
+
+    - (instancetype)initWithFrame:(CGRect)frame
+    {
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RTNImageComponentProps>();
+        _props = defaultProps;
+
+        _view = [[UIView alloc] init];
+        _view.backgroundColor = [UIColor redColor];
+
+        _imageView = [[UIImageView alloc] init];
+        [_view addSubview:_imageView];
+
+        _imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+        [_imageView.topAnchor constraintEqualToAnchor:_view.topAnchor constant:10],
+        [_imageView.leftAnchor constraintEqualToAnchor:_view.leftAnchor constant:10],
+        [_imageView.bottomAnchor constraintEqualToAnchor:_view.bottomAnchor constant:-10],
+        [_imageView.rightAnchor constraintEqualToAnchor:_view.rightAnchor constant:-10],
+        ]];
+        _imageView.image = _image;
+
+        self.contentView = _view;
+    }
+
+    return self;
+    }
+
+    - (void)prepareForRecycle
+    {
+    [super prepareForRecycle];
+    _image = nil;
+    }
+
+    - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+    {
+    [super updateProps:props oldProps:oldProps];
+    }
+
+    - (void)updateState:(facebook::react::State::Shared const &)state
+            oldState:(facebook::react::State::Shared const &)oldState
+    {
+    auto _state = std::static_pointer_cast<RTNImageComponentShadowNode::ConcreteState const>(state);
+    auto _oldState = std::static_pointer_cast<RTNImageComponentShadowNode::ConcreteState const>(oldState);
+    }
+
+    @end
+
+    Class<RCTComponentViewProtocol> RTNImageComponentCls(void)
+    {
+    return RTNImageComponentView.class;
+    }
+    ```
