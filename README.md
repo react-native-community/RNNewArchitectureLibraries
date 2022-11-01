@@ -9,6 +9,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Setup] Create the image-component folder and the package.json](#setup)
 * [[Fabric Component] Create the TS specs](#ts-specs)
 * [[Fabric Component] Setup Codegen](#codegen)
+* [[Fabric Componenr] Create the podspec for iOS](#ios-podspec)
 
 ## Steps
 
@@ -72,14 +73,41 @@ export default codegenNativeComponent<NativeProps>(
 ) as HostComponent<NativeProps>;
 ```
 
-### <a name="codegen">[[Fabric Component] Setup Codegen]()
+### <a name="codegen" />[[Fabric Component] Setup Codegen]()
 
 1. Open the `image-component/package.json`
 2. Add the following snippet at the end of it:
 ```json
-"codegenConfig": {
+, "codegenConfig": {
     "name": "RTNImageViewSpec",
     "type": "all",
     "jsSrcsDir": "src"
 }
+```
+
+### <a name="ios-podspec" />[[Fabric Componenr] Create the podspec for iOS]()
+
+* Create a `image-component.podspec` file
+* Paste the following content into it:
+
+```ruby
+require "json"
+
+package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+
+Pod::Spec.new do |s|
+  s.name            = "image-component"
+  s.version         = package["version"]
+  s.summary         = package["description"]
+  s.description     = package["description"]
+  s.homepage        = package["homepage"]
+  s.license         = package["license"]
+  s.platforms       = { :ios => "11.0" }
+  s.author          = package["author"]
+  s.source          = { :git => package["repository"], :tag => "#{s.version}" }
+
+  s.source_files    = "ios/**/*.{h,m,mm,swift}"
+
+  install_modules_dependencies(s)
+end
 ```
