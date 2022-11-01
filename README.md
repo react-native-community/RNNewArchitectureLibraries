@@ -11,6 +11,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Setup Codegen](#codegen)
 * [[Fabric Componenr] Create the podspec for iOS](#ios-podspec)
 * [[Fabric Component] Create the Basic Component](#ios-basic)
+* [[Fabric Component] Configure podspec and package.json to work with custom C++ Files](ios-cxx-podspec)
 
 ## Steps
 
@@ -225,3 +226,22 @@ end
     return RTNImageComponentView.class;
     }
     ```
+
+### <a name="ios-cxx-podspec">[[Fabric Component] Configure podspec and package.json to work with custom C++ Files]()
+
+* Alongside the `ios` and the `src` folder, create a new `cxx` folder.
+* Open the `image-component.podspec` file
+* change the following line to include also the content of the cxx folder:
+```diff
+- s.source_files    = "ios/**/*.{h,m,mm,cpp,swift}"
++ s.source_files    = "{cxx,ios}/**/*.{h,m,mm,cpp,swift}"
+```
+* open the `package.json` file and add the `cxx` folder in the files list
+```diff
+  "files": [
+        "src",
+        "android",
+        "ios",
++       "cxx",
+        "example-component.podspec",
+```
