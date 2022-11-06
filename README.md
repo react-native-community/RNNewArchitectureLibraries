@@ -13,6 +13,8 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Create the Basic Component](#ios-basic)
 * [[Fabric Component] Configure podspec and package.json to work with custom C++ Files](#ios-cxx-podspec)
 * [[Fabric Component] Implement Cxx state](#ios-cxx-advanced)
+* [[Fabric Component] Update the iOS Code](#update-ios-code)
+* [[Test iOS] Test your iOS Component](#test-ios)
 
 ## Steps
 
@@ -476,3 +478,192 @@ end
     } // namespace react
     } // namespace facebook
   ```
+
+### <a name="update-ios-code" /> [[Fabric Component] Update the iOS Code]()
+
+* Open the `ios/RTNImageComponentView.mm` and update the code as it follows:
+```diff
+#import "RTNImageComponentView.h"
+
+#import <react/renderer/components/RTNImageViewSpec/ComponentDescriptors.h>
+#import <react/renderer/components/RTNImageViewSpec/EventEmitters.h>
+#import <react/renderer/components/RTNImageViewSpec/Props.h>
+#import <react/renderer/components/RTNImageViewSpec/RCTComponentViewHelpers.h>
++ #import "ComponentDescriptors.h"
+
++ #import <React/RCTImageResponseDelegate.h>
++ #import <React/RCTImageResponseObserverProxy.h>
+
+#import "RCTFabricComponentsPlugins.h"
+
+using namespace facebook::react;
+
+- @interface RTNImageComponentView () <RCTRTNImageComponentViewProtocol>
++ @interface RTNImageComponentView () <RCTRTNImageComponentViewProtocol, RCTImageResponseDelegate>
+
+@implementation RTNImageComponentView {
+  UIView *_view;
+  UIImageView *_imageView;
+  UIImage *_image;
++  ImageResponseObserverCoordinator const *_imageCoordinator;
++  RCTImageResponseObserverProxy _imageResponseObserverProxy;
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+-  return concreteComponentDescriptorProvider<RTNImageComponentComponentDescriptor>();
++  return concreteComponentDescriptorProvider<RTNImageComponentCustomComponentDescriptor>();
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  //...
+
+      _imageView.image = _image;
+
++    _imageResponseObserverProxy = RCTImageResponseObserverProxy(self);
+
+    self.contentView = _view;
+}
+
+- (void)prepareForRecycle
+{
+  [super prepareForRecycle];
++  self.imageCoordinator = nullptr;
+  _image = nil;
+}
+
+- (void)updateState:(facebook::react::State::Shared const &)state
+           oldState:(facebook::react::State::Shared const &)oldState
+{
+  auto _state = std::static_pointer_cast<RTNImageComponentCustomShadowNode::ConcreteState const>(state);
+  auto _oldState = std::static_pointer_cast<RTNImageComponentCustomShadowNode::ConcreteState const>(oldState);
+
++  auto data = _state->getData();
++
++  bool havePreviousData = _oldState != nullptr;
++
++  auto getCoordinator = [](ImageRequest const *request) -> ImageResponseObserverCoordinator const * {
++    if (request) {
++      return &request->getObserverCoordinator();
++    } else {
++      return nullptr;
++    }
++  };
++
++  if (!havePreviousData || data.getImageSource() != _oldState->getData().getImageSource()) {
++    self.imageCoordinator = getCoordinator(&data.getImageRequest());
++  }
+}
+
++ #pragma mark - ImageCoordination
++
++ - (void)setImageCoordinator:(const ImageResponseObserverCoordinator *)coordinator
++ {
++   if (_imageCoordinator) {
++     _imageCoordinator->removeObserver(_imageResponseObserverProxy);
++   }
++   _imageCoordinator = coordinator;
++   if (_imageCoordinator) {
++     _imageCoordinator->addObserver(_imageResponseObserverProxy);
++   }
++ }
+
++ - (void)setImage:(UIImage *)image
++ {
++   if ([image isEqual:_image]) {
++     return;
++   }
++
++   _imageView.image = image;
++ }
+
++ #pragma mark - RCTImageResponseDelegate
++
++ - (void)didReceiveImage:(UIImage *)image metadata:(id)metadata fromObserver:(void const *)observer
++ {
++   if (observer == &_imageResponseObserverProxy) {
++     self.image = image;
++   }
++ }
++
++ - (void)didReceiveProgress:(float)progress fromObserver:(void const *)observer
++ {
++ }
++
++ - (void)didReceiveFailureFromObserver:(void const *)observer
++ {
++ }
+
+```
+
+### <a name="test-ios" />[[Test iOS] Test your iOS Component]()
+
+**Note:** The app code is not committed to the repo to highlight only important changes
+
+* At the same level of the `image-component` folder, run the command:
+```sh
+npx react-native init NewArchitecture --version next
+```
+* `cd NewArchitecture`
+* `yarn add ../image-component`
+* `cd ios`
+* `bundle install`
+* `RCT_NEW_ARCH_ENABLED=1 bundle exec pod install`
+* Replace the content of the App.ts file with the following
+```ts
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
+import React from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  useColorScheme,
+  View,
+} from 'react-native';
+
+import {
+  Colors
+} from 'react-native/Libraries/NewAppScreen';
+
+import ImageComponentNativeComponent from 'image-component/src/ImageComponentNativeComponent';
+
+function App(): JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <ImageComponentNativeComponent image={{
+              uri: 'https://reactnative.dev/img/tiny_logo.png',
+            }} style={{width:100, height:100}}/>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+export default App;
+```
+* `open NewArchitecture.xcworkspace`
+* Press the run button on Xcode
