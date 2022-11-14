@@ -15,6 +15,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Implement Cxx state](#ios-cxx-advanced)
 * [[Fabric Component] Update the iOS Code](#update-ios-code)
 * [[Test iOS] Test your iOS Component](#test-ios)
+* [[Fabric Component] Add Android implementation](#android-impl)
 
 ## Steps
 
@@ -667,3 +668,227 @@ export default App;
 ```
 * `open NewArchitecture.xcworkspace`
 * Press the run button on Xcode
+
+### <a name="android-impl">[[Fabric Component] Add Android implementation]()
+
+* Create an `android` folder next to the `ios` one
+* Create the `build.gradle` file with the following content:
+```groovy
+buildscript {
+    ext.safeExtGet = {prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+    repositories {
+        google()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.2.0")
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.facebook.react'
+
+android {
+    compileSdkVersion safeExtGet('compileSdkVersion', 31)
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 23)
+        targetSdkVersion safeExtGet('targetSdkVersion', 31)
+    }
+}
+
+repositories {
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$projectDir/../node_modules/react-native/android"
+    }
+    mavenCentral()
+    google()
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-native:+'
+}
+```
+* Create a folder `src/main` and create the `AndroidManifest.xml` inside that folder. The Manifest has this content:
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.imagecomponentlibrary">
+</manifest>
+```
+* Create the `ImageComponentView.java` in the `android/app/src/main/java/com/imagecomponent` folder
+```java
+package com.imagecomponentlibrary;
+
+import android.content.Context;
+import android.net.Uri;
+import android.util.AttributeSet;
+import androidx.annotation.Nullable;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.react.bridge.ReadableMap;
+
+class ImageComponentView extends SimpleDraweeView {
+
+  public ImageComponentView(Context context) {
+    super(context);
+  }
+
+  public ImageComponentView(Context context, @Nullable AttributeSet attrs) {
+      super(context, attrs);
+  }
+
+  public ImageComponentView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+      super(context, attrs, defStyleAttr);
+  }
+
+  void setImage(@Nullable ReadableMap source) {
+    String uri = source != null ? source.getString("uri") : null;
+    Uri imageUri = Uri.parse(uri);
+    this.setImageURI(imageUri);
+  }
+}
+```
+* Create the `ImageComponentViewManager.java` in the `android/app/src/main/java/com/imagecomponent` folder
+```java
+package com.imagecomponentlibrary;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.uimanager.SimpleViewManager;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.ViewManagerDelegate;
+import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.viewmanagers.RTNImageComponentManagerDelegate;
+import com.facebook.react.viewmanagers.RTNImageComponentManagerInterface;
+
+/** View manager for {@link NativeViewVithState} components. */
+@ReactModule(name = ImageComponentViewManager.REACT_CLASS)
+public class ImageComponentViewManager extends SimpleViewManager<ImageComponentView>
+    implements RTNImageComponentManagerInterface<ImageComponentView> {
+
+  public static final String REACT_CLASS = "RTNImageComponent";
+  ReactApplicationContext mCallerContext;
+  private final ViewManagerDelegate<ImageComponentView> mDelegate;
+
+
+  public ImageComponentViewManager(ReactApplicationContext reactContext) {
+      mCallerContext = reactContext;
+      mDelegate = new RTNImageComponentManagerDelegate<>(this);
+  }
+
+  @Nullable
+  @Override
+  protected ViewManagerDelegate<ImageComponentView> getDelegate() {
+    return mDelegate;
+  }
+
+  @NonNull
+  @Override
+  public String getName() {
+    return REACT_CLASS;
+  }
+
+  @NonNull
+  @Override
+  protected ImageComponentView createViewInstance(@NonNull ThemedReactContext reactContext) {
+    return new ImageComponentView(reactContext);
+  }
+
+  @Override
+  @ReactProp(name = "image")
+  public void setImage(ImageComponentView view, @Nullable ReadableMap value) {
+    view.setImage(value);
+  }
+}
+```
+* Create the `ImageComponentViewPackage.java` in the `android/app/src/main/java/com/imagecomponent` folder
+```java
+package com.imagecomponentlibrary;
+
+import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.ViewManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class ImageComponentViewPackage implements ReactPackage {
+
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.singletonList(new ImageComponentViewManager(reactContext));
+    }
+
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
+
+}
+```
+* Create a custom `CMakeLists.txt` file in the `image-component/cxx` folder. We need to use some custom C++ files and the `CMakeLists.txt` is the file that instructs Android on where these files can be found. The content is the following:
+```c
+cmake_minimum_required(VERSION 3.13)
+set(CMAKE_VERBOSE_MAKEFILE on)
+
+file(
+  GLOB react_codegen_SRCS CONFIGURE_DEPENDS
+  *.cpp
+  react/renderer/components/RTNImageViewSpec/*.cpp
+  ../android/build/generated/source/codegen/jni/react/renderer/components/RTNImageViewSpec/EventEmitters.cpp
+  ../android/build/generated/source/codegen/jni/react/renderer/components/RTNImageViewSpec/Props.cpp
+  ../android/build/generated/source/codegen/jni/RTNImageViewSpec-generated.cpp
+)
+
+add_library(
+  react_codegen_RTNImageViewSpec
+  SHARED
+  ${react_codegen_SRCS}
+)
+
+target_include_directories(
+  react_codegen_RTNImageViewSpec
+  PUBLIC
+  .
+  react/renderer/components/RTNImageViewSpec
+  ../android/build/generated/source/codegen/jni
+  ../android/build/generated/source/codegen/jni/react/renderer/components/RTNImageViewSpec
+)
+
+target_link_libraries(
+  react_codegen_RTNImageViewSpec
+  fbjni
+  folly_runtime
+  glog
+  jsi
+  react_codegen_rncore
+  react_debug
+  react_nativemodule_core
+  react_render_core
+  react_render_debug
+  react_render_graphics
+  react_render_imagemanager
+  react_render_mapbuffer
+  rrc_image
+  rrc_view
+  turbomodulejsijni
+  yoga
+)
+
+target_compile_options(
+  react_codegen_RTNImageViewSpec
+  PRIVATE
+  -DLOG_TAG=\"ReactNative\"
+  -fexceptions
+  -frtti
+  -std=c++17
+  -Wall
+)
+```
