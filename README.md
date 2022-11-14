@@ -16,6 +16,7 @@ Loading images on **Android** is done with Fresco, so the android component won'
 * [[Fabric Component] Update the iOS Code](#update-ios-code)
 * [[Test iOS] Test your iOS Component](#test-ios)
 * [[Fabric Component] Add Android implementation](#android-impl)
+* [[Test Android] Test your Android Component](#test-android)
 
 ## Steps
 
@@ -891,4 +892,32 @@ target_compile_options(
   -std=c++17
   -Wall
 )
+```
+
+### <a name="test-android" />[[Test Android] Test your Android Component]()
+
+* In the `NewArchitecture` folder, create a new file `react-native.config.js`. This is used to configure Custom Descriptors and Make Files.
+```js
+module.exports = {
+    dependencies: {
+        'image-component': {
+            platforms: {
+                android: {
+                    componentDescriptors: [
+                        "RTNImageComponentCustomComponentDescriptor"
+                    ],
+                    cmakeListsPath: " ../../../../../node_modules/image-component/cxx/CMakeLists.txt"
+                }
+            }
+        }
+    }
+}
+```
+* In the `NewArchitecture` folder, readd the package:
+```sh
+yarn add ../image-component
+```
+* Rebuild Android
+```sh
+yarn android
 ```
