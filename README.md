@@ -7,16 +7,16 @@ Start from there up to the `[TurboModule] Test the Turbomodule` section. Then, f
 
 * [[Setup] Update to 0.71-RC.3](#update)
 * [[Setup] Update podspec](#update-podspec)
-
+* [[Swift] Add Swift files](#swift)
 
 ## Steps
 
-### <a name="update">[[Setup] Update to 0.71-RC.3]()
+### <a name="update" />[[Setup] Update to 0.71-RC.3]()
 
 1. `cd NewArchitecture` - It has been created in this [step](https://github.com/react-native-community/RNNewArchitectureLibraries/tree/feat/back-turbomodule-070#tm-test).
 2. `yarn add react-native@0.71.0-rc.3`
 
-### <a name="update-podspec">[[Setup] Update podspec]()
+### <a name="update-podspec" />[[Setup] Update podspec]()
 
 1. Open the `calculator/calculator.podspec` file
 2. Update it as it follows:
@@ -64,3 +64,26 @@ Pod::Spec.new do |s|
 -  end
 end
 ```
+
+### <a name="swift" />[[Swift] Add Swift files]()
+
+1. Create a new file: `calculator/ios/calculator-Bridging-Header.h` with the following content
+    ```c++
+    //
+    // Add the Objective-C headers that must imported by Swift files
+    //
+    ```
+    **Note:** This file is used to specify some headers files that the Swift code should be able to import. For this example, it will stay empty. However, it is required to properly build the project.
+2. Create a new file `calculator/ios/Calculator.swift` with the implementation of the logic:
+    ```swift
+    import Foundation
+
+    @objc
+    class Calculator: NSObject {
+
+      @objc
+      static func add(a: Int, b: Int) -> Int {
+        return a+b;
+      }
+    }
+    ```
