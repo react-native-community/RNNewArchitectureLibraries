@@ -8,6 +8,7 @@ Start from there up to the `[TurboModule] Test the Turbomodule` section. Then, f
 * [[Setup] Update to 0.71-RC.3](#update)
 * [[Setup] Update podspec](#update-podspec)
 * [[Swift] Add Swift files](#swift)
+* [[iOS] Update Calculator file](#update-calculator)
 
 ## Steps
 
@@ -77,5 +78,31 @@ end
       static func add(a: Int, b: Int) -> Int {
         return a+b;
       }
+    }
+    ```
+
+### <a name="upadet-calculator" />[[iOS] Update Calculator file]()
+
+1. Open the `calculator/ios/RNCalculator.mm` file and update the logic to invoke the Swift one
+    ```diff
+    // This are not needed
+    - #ifdef RCT_NEW_ARCH_ENABLED
+    - #import "RNCalculatorSpec.h"
+    - #endif
+
+    + #import <calculator-Swift.h>
+
+    @implementation RNCalculator
+
+    RCT_EXPORT_MODULE(Calculator)
+
+    RCT_REMAP_METHOD(add, addA:(NSInteger)a
+                            andB:(NSInteger)b
+                    withResolver:(RCTPromiseResolveBlock) resolve
+                    withRejecter:(RCTPromiseRejectBlock) reject)
+    {
+    -    NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+    +    NSNumber *result = @([Calculator addWithA:a b:b]);
+        resolve(result);
     }
     ```

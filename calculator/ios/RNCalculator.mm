@@ -1,8 +1,6 @@
 #import "RNCalculator.h"
-// Thanks to this guard, we won't import this header when we build for the old architecture.
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "RNCalculatorSpec.h"
-#endif
+
+#import "calculator-Swift.h"
 
 @implementation RNCalculator
 
@@ -26,7 +24,7 @@ RCT_REMAP_METHOD(add, addA:(NSInteger)a
 #endif
 
 - (void)add:(double)a b:(double)b resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-  NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+  NSNumber *result = @([Calculator addWithA:a b:b]);
   resolve(result);
 }
 
