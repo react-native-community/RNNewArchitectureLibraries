@@ -4,6 +4,8 @@
 #import "RNCalculatorSpec.h"
 #endif
 
+#import "calculator-Swift.h"
+
 @implementation RNCalculator
 
 RCT_EXPORT_MODULE()
@@ -26,7 +28,7 @@ RCT_REMAP_METHOD(add, addA:(NSInteger)a
 #endif
 
 - (void)add:(double)a b:(double)b resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-  NSNumber *result = [[NSNumber alloc] initWithInteger:a+b];
+  NSNumber *result = @([Calculator addWithA:a b:b]);
   resolve(result);
 }
 
