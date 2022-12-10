@@ -9,6 +9,7 @@ Start from there up to the `[TurboModule] Test the Turbomodule` section. Then, f
 * [[Setup] Update podspec](#update-podspec)
 * [[Swift] Add Swift files](#swift)
 * [[iOS] Update Calculator file](#update-calculator)
+* [[Test] Test the swift TurboModule](#test-swift)
 
 ## Steps
 
@@ -113,3 +114,19 @@ end
         resolve(result);
     }
     ```
+
+### <a name="test-swift" /> [[Test] Test the swift TurboModule]()
+
+1. Navigate to the `NewArchitecture` root folder:
+2. `yarn add ../calculator`
+3. `cd ios`
+4. `RCT_NEW_ARCH_ENABLED=1 bundle exec pod install`
+5. `cd ..`
+6. `yarn ios`
+7. Click on Calculate and observe that the app is still working.
+
+If you want to verify that the Swift code is invoked:
+- Add a `print(">>> Calling from Swift")` statement in the `calculator/ios/Calculator.swift`.
+- Open the `ios/NewArchitexture.xcworkspace` in Xcode.
+- Run the app from Xcode.
+- Observe the `>>> Calling from Swift` in the Xcode console.
