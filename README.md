@@ -13,12 +13,12 @@ Start from there up to the `[TurboModule] Test the Turbomodule` section. Then, f
 
 ## Steps
 
-### <a name="update" />[[Setup] Update to 0.71-RC.3]()
+### <a name="update" />[[Setup] Update to 0.71-RC.3](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/a2d9d5c19eb4b936b91f937777f8590952aa6371)
 
 1. `cd NewArchitecture` - It has been created in this [step](https://github.com/react-native-community/RNNewArchitectureLibraries/tree/feat/back-turbomodule-070#tm-test).
 2. `yarn add react-native@0.71.0-rc.3`
 
-### <a name="update-podspec" />[[Setup] Update podspec]()
+### <a name="update-podspec" />[[Setup] Update podspec](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/6d199a42e3a418a988c22491e9822802daa7609a)
 
 1. Open the `calculator/calculator.podspec` file
 2. Update it as it follows:
@@ -66,7 +66,7 @@ Pod::Spec.new do |s|
 end
 ```
 
-### <a name="swift" />[[Swift] Add Swift files]()
+### <a name="swift" />[[Swift] Add Swift files](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/1f67c6c4821697e3671406c64b837278e7340f6d)
 
 1. Create a new file `calculator/ios/Calculator.swift` with the implementation of the logic:
     ```swift
@@ -82,7 +82,7 @@ end
     }
     ```
 
-### <a name="upadet-calculator" />[[iOS] Update Calculator file]()
+### <a name="upadet-calculator" />[[iOS] Update Calculator file](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/4e58beec5f31c7d68c4cf8fc276cc13c8b00dbd8)
 
 1. Open the `calculator/ios/RNCalculator.mm` file and update the logic to invoke the Swift one
     ```diff
@@ -108,7 +108,7 @@ end
     }
     ```
 
-### <a name="test-swift" /> [[Test] Test the swift TurboModule]()
+### <a name="test-swift" /> [[Test] Test the swift TurboModule](https://github.com/cipolleschi/RNNewArchitectureLibraries/commit/f04ce242995a23b4721e0072edbb5d77623a067d)
 
 1. Navigate to the `NewArchitecture` root folder:
 2. `yarn add ../calculator`
