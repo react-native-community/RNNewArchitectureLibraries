@@ -8,6 +8,7 @@ Start from there up to the `[TurboModule] Test the swift Turbomodule` section. T
 * [[Codegen] Update Codegen Specs](#codegen)
 * [[Swift] Implement the Swift logic](#swift-logic)
 * [[Obj-C++] Implement the Objective-C++ logic](#objc-logic)
+* [[Test] Test the new feature in your app](#test)
 
 ## Steps
 
@@ -158,3 +159,42 @@ extension Calculator {
         [calculator eventfulSqrtWithValue:a];
     }
     ```
+
+### <a name="test" />[[Test] Test the new feature in your app]()
+
+1. from the `NewArchitecture` root app, run:
+```sh
+cd add ../calculator
+cd ios
+RCT_NEW_ARCH_ENABLED=1 bundle exec pod install
+cd ..
+```
+2. Open the `NewArchitecture/App.tsx` file and, inside the `function App()` body:
+    1. Add the following line to handle the new state
+    ```ts
+    const [sqrtState, setSqrtState] = useState<number | undefined>(undefined);
+    ```
+    2. Add a function to issue the computation:
+    ```ts
+    async function computeSqrt() {
+        RNCalculator.eventfulSqrt(4);
+    }
+    ```
+    3. Register to the event emitter:
+    ```ts
+    const eventEmitter = new NativeEventEmitter(RNCalculator);
+    let subscription = null
+    subscription = eventEmitter.addListener("sqrt", (event) => {
+        setSqrtState(event);
+    });
+    ```
+    4. Add the UI to test your code:
+    ```ts
+    <Text>eventfulSqrt(4)={sqrtState ? `${sqrtState}` : '???' } </Text>
+    <Button title='Compute' onPress={computeSqrt}/>
+    ```
+3. Run `yarn ios` from the `NewArchitecture` folder
+
+**Note:** Not to pollute the repository, the code of the `NewArchitecture` app has not been pushed. Follow the previous guides to set it up:
+- [feat/back-turbomodule-070](https://github.com/react-native-community/RNNewArchitectureLibraries/tree/feat/back-turbomodule-070)
+- [feat/turbomodule-swift](https://github.com/react-native-community/RNNewArchitectureLibraries/tree/feat/turbomodule-swift)
