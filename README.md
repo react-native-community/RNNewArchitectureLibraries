@@ -7,7 +7,7 @@ Start from there up to the `[TurboModule] Test the swift Turbomodule` section. T
 
 * [[Codegen] Update Codegen Specs](#codegen)
 * [[Swift] Implement the Swift logic](#swift-logic)
-
+* [[Obj-C++] Implement the Objective-C++ logic](#objc-logic)
 
 ## Steps
 
@@ -84,3 +84,77 @@ extension Calculator {
   }
 }
 ```
+
+### <a name="objc-logic" />[[Obj-C++] Implement the Objective-C++ logic]()
+
+1. Open the header file `calculator/ios/RNCalculator.h` and make it extend `RCTEventEmitter`
+```diff
+#import <Foundation/Foundation.h>
++ #import <React/RCTEventEmitter.h>
+
+#if RCT_NEW_ARCH_ENABLED
+
+#import <RNCalculatorSpec/RNCalculatorSpec.h>
+-@interface RNCalculator: NSObject <NativeCalculatorSpec>
++@interface RNCalculator: RCTEventEmitter <NativeCalculatorSpec>
+
+#else
+
+#import <React/RCTBridgeModule.h>
+-@interface RNCalculator : NSObject <RCTBridgeModule>
++@interface RNCalculator : RCTEventEmitter <RCTBridgeModule>
+
+#endif
+
+@end
+```
+2. Open the implementation file `calculator/ios/RNCalculator.mm` and:
+    1. Make it conform to the protocol
+    ```objc
+    // Options 2.A - Conform to the protocol
+    @interface RNCalculator () <CalculatorDelegate>
+    @end
+    ```
+    2. Add a property to store the Calculator:
+    ```objc
+    @implementation RNCalculator {
+        Calculator *calculator;
+    }
+    ```
+    3. Implement the initializer, passing self as a delegate
+    ```c++
+    - (instancetype)init {
+        self = [super init];
+        if(self) {
+            // Option 2.B - Instantiate the Calculator and set the delegate
+            calculator = [Calculator new];
+            calculator.delegate = self;
+        }
+        return self;
+    }
+    ```
+    4. Given that we implemented a custom init, we need to implement the `requiresMainQueueSetup` method:
+    ```c++
+    + (BOOL)requiresMainQueueSetup {
+        return NO;
+    }
+    ```
+    5. Implement the `RCTEventEmitter` required fields. Notice that we leverage the Swift implementation
+    ```c++
+    - (NSArray<NSString *> *)supportedEvents {
+        return [Calculator supportedEvents];
+    }
+    ```
+    6. Implement the `CalculatorDelegate` requirements. Here we emit the event to the JS side of React Native. The `sendEventWithName:body` is provided by React Native itself.
+    ```c++
+    - (void)sendEventWithName:(NSString * _Nonnull)name result:(double)result {
+        [self sendEventWithName:name body:@(result)];
+    }
+    ```
+    7. Implement the Specs by calling the Swift code:
+    ```c++
+    RCT_EXPORT_METHOD(eventfulSqrt:(double)a)
+    {
+        [calculator eventfulSqrtWithValue:a];
+    }
+    ```

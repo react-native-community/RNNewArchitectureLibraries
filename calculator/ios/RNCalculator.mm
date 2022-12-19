@@ -6,9 +6,29 @@
 
 #import "calculator-Swift.h"
 
-@implementation RNCalculator
+// Options 2.A - Conform to the protocol
+@interface RNCalculator () <CalculatorDelegate>
+@end
+
+@implementation RNCalculator {
+  Calculator *calculator;
+}
+
+- (instancetype)init {
+  self = [super init];
+  if(self) {
+    // Option 2.B - Instantiate the Calculator and set the delegate
+    calculator = [Calculator new];
+    calculator.delegate = self;
+  }
+  return self;
+}
 
 RCT_EXPORT_MODULE()
+
++ (BOOL)requiresMainQueueSetup {
+  return NO;
+}
 
 RCT_REMAP_METHOD(add, addA:(NSInteger)a
                         andB:(NSInteger)b
@@ -28,8 +48,26 @@ RCT_REMAP_METHOD(add, addA:(NSInteger)a
 #endif
 
 - (void)add:(double)a b:(double)b resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-  NSNumber *result = @([Calculator addWithA:a b:b]);
+  NSNumber *result = @([calculator addWithA:a b:b]);
   resolve(result);
+}
+
+// Event Emitter
+
+- (NSArray<NSString *> *)supportedEvents {
+  return [Calculator supportedEvents];
+}
+
+// Options 2.D - Implement the Specs
+RCT_EXPORT_METHOD(eventfulSqrt:(double)a)
+{
+  [calculator eventfulSqrtWithValue:a];
+}
+
+
+// Option 2.C - Implement the protocol
+- (void)sendEventWithName:(NSString * _Nonnull)name result:(double)result {
+  [self sendEventWithName:name body:@(result)];
 }
 
 @end
