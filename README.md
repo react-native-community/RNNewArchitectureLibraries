@@ -3,6 +3,8 @@
 This run starts from the [feat/turbomodule-swift](https://github.com/react-native-community/RNNewArchitectureLibraries/tree/feat/turbomodule-swift) branch.
 Start from there up to the `[TurboModule] Test the swift Turbomodule` section. Then, follow the steps below to move your logic to a Swift implementation file.
 
+This guide will teach how to implement a function call in the Native platform that produces a result in Javascript as an asynchronous event, instead of using a promise or a synchronous call. It also show how to set up properly the delegate pattern between Swift and Objective-C++, in case the Swift implementation needs some state.
+
 ## Table of contents
 
 * [[Codegen] Update Codegen Specs](#codegen)
@@ -12,7 +14,7 @@ Start from there up to the `[TurboModule] Test the swift Turbomodule` section. T
 
 ## Steps
 
-### <a name="codegen" />* [[Codegen] Update Codegen Specs](#codegen)
+### <a name="codegen" />[[Codegen] Update Codegen Specs](https://github.com/react-native-community/RNNewArchitectureLibraries/commit/5893a1ebd85c5dcc48783aa626b2ab8209ab5149)
 
 1. Open the `calculator/src/NativeCalculator.js` file and add the following lines
 ```diff
@@ -31,6 +33,10 @@ export interface Spec extends TurboModule {
 **Note:** The `addListener` and `removeListeners` implementations will be provided by React Native.
 
 ### <a name="swift-logic" />[[Swift] Implement the Swift logic]()
+
+**Note:** This will be fixed in the stable release of 0.71
+
+### <a name="swift-logic" />[[Swift] Implement the Swift logic](https://github.com/react-native-community/RNNewArchitectureLibraries/commit/b73b48b7fbae5a78629466a46ed0208e6ac26308)
 
 1. Open the `calculator/ios/Calculator.swift` file
 2. Add the following `CalculatorDelegate` protocol in it. This protocol will be implemented by the Objective-C++ class to provide the send event method to the Swift implementation
@@ -86,7 +92,7 @@ extension Calculator {
 }
 ```
 
-### <a name="objc-logic" />[[Obj-C++] Implement the Objective-C++ logic]()
+### <a name="objc-logic" />[[Obj-C++] Implement the Objective-C++ logic](https://github.com/react-native-community/RNNewArchitectureLibraries/commit/2543c47a4e1957d9628341b3e877ae60b322d977)
 
 1. Open the header file `calculator/ios/RNCalculator.h` and make it extend `RCTEventEmitter`
 ```diff
@@ -160,7 +166,7 @@ extension Calculator {
     }
     ```
 
-### <a name="test" />[[Test] Test the new feature in your app]()
+### <a name="test" />[[Test] Test the new feature in your app](https://github.com/react-native-community/RNNewArchitectureLibraries/commit/a2682b156a29d254cec8c6adee0cd7e079c4501b)
 
 1. from the `NewArchitecture` root app, run:
 ```sh
