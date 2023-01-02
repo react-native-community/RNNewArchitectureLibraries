@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files    = "ios/**/*.{h,m,mm,swift}"
 
   s.pod_target_xcconfig    = {
-    "DEFINE_MODULES" => "YES",
+    "DEFINES_MODULE" => "YES",
     "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES",
     "SWIFT_OBJC_BRIDGING_HEADER" => "../../node_modules/calculator/ios/calculator-Bridging-Header.h"
   }
