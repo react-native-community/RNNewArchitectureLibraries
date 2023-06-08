@@ -1,10 +1,3 @@
-//
-//  RNTCalculator.m
-//  SwiftCXX
-//
-//  Created by Riccardo Cipolleschi on 07/06/2023.
-//
-
 #import "RTNCalculator.h"
 
 @implementation RTNCalculator

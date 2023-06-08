@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import "SwiftCXX-Swift.h"
 
 @implementation AppDelegate
 
@@ -11,6 +12,9 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  RTNCalculatorSwift * calc = [[RTNCalculatorSwift alloc] init];
+  id s = [calc giveMeAString];
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

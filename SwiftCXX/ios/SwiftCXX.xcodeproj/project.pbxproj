@@ -15,6 +15,7 @@
 		7699B88040F8A987B510C191 /* libPods-SwiftCXX-SwiftCXXTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-SwiftCXX-SwiftCXXTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CD1AD22B2A30D3DC007F18D3 /* RTNCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1AD22A2A30D3DC007F18D3 /* RTNCalculator.swift */; };
+		CD9256632A3247F500DA75A2 /* Person.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD9256612A3247F500DA75A2 /* Person.cpp */; };
 		CDB12D222A30CB4A00D3F5B1 /* RTNCalculator.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDB12D212A30CB4A00D3F5B1 /* RTNCalculator.mm */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,8 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-SwiftCXX-SwiftCXXTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftCXX-SwiftCXXTests.release.xcconfig"; path = "Target Support Files/Pods-SwiftCXX-SwiftCXXTests/Pods-SwiftCXX-SwiftCXXTests.release.xcconfig"; sourceTree = "<group>"; };
 		CD1AD2292A30D3DB007F18D3 /* SwiftCXX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftCXX-Bridging-Header.h"; sourceTree = "<group>"; };
 		CD1AD22A2A30D3DC007F18D3 /* RTNCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTNCalculator.swift; sourceTree = "<group>"; };
+		CD9256612A3247F500DA75A2 /* Person.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Person.cpp; path = SwiftCXX/Person.cpp; sourceTree = "<group>"; };
+		CD9256622A3247F500DA75A2 /* Person.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Person.hpp; path = SwiftCXX/Person.hpp; sourceTree = "<group>"; };
 		CDB12D212A30CB4A00D3F5B1 /* RTNCalculator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = RTNCalculator.mm; path = SwiftCXX/RTNCalculator.mm; sourceTree = "<group>"; };
 		CDB12D232A30CB5B00D3F5B1 /* RTNCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RTNCalculator.h; path = SwiftCXX/RTNCalculator.h; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -102,6 +105,8 @@
 				CDB12D232A30CB5B00D3F5B1 /* RTNCalculator.h */,
 				CD1AD22A2A30D3DC007F18D3 /* RTNCalculator.swift */,
 				CD1AD2292A30D3DB007F18D3 /* SwiftCXX-Bridging-Header.h */,
+				CD9256612A3247F500DA75A2 /* Person.cpp */,
+				CD9256622A3247F500DA75A2 /* Person.hpp */,
 			);
 			name = SwiftCXX;
 			sourceTree = "<group>";
@@ -425,6 +430,7 @@
 				CD1AD22B2A30D3DC007F18D3 /* RTNCalculator.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				CD9256632A3247F500DA75A2 /* Person.cpp in Sources */,
 				CDB12D222A30CB4A00D3F5B1 /* RTNCalculator.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -512,10 +518,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -fmodule-map-file=\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit/YogaKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/FlipperKit/FlipperKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTFabric/React-RCTFabric.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTTypeSafety/RCTTypeSafety.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React/React-Core.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/ReactCommon/ReactCommon.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React_Codegen/React-Codegen.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/folly/RCT-Folly.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/yoga/Yoga.modulemap\" -Xcc -DFB_SONARKIT_ENABLED=1 -cxx-interoperability-mode=default";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -fmodule-map-file=\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit/YogaKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/FlipperKit/FlipperKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTFabric/React-RCTFabric.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTTypeSafety/RCTTypeSafety.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React/React-Core.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/ReactCommon/ReactCommon.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React_Codegen/React-Codegen.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/folly/RCT-Folly.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/yoga/Yoga.modulemap\" -Xcc -DFB_SONARKIT_ENABLED=1";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SwiftCXX;
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftCXX-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -540,10 +547,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -fmodule-map-file=\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit/YogaKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTFabric/React-RCTFabric.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTTypeSafety/RCTTypeSafety.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React/React-Core.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/ReactCommon/ReactCommon.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React_Codegen/React-Codegen.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/folly/RCT-Folly.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/yoga/Yoga.modulemap\" -cxx-interoperability-mode=default";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -fmodule-map-file=\"${PODS_CONFIGURATION_BUILD_DIR}/YogaKit/YogaKit.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTFabric/React-RCTFabric.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/RCTTypeSafety/RCTTypeSafety.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React/React-Core.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/ReactCommon/ReactCommon.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/React_Codegen/React-Codegen.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/folly/RCT-Folly.modulemap\" -Xcc -fmodule-map-file=\"${PODS_ROOT}/Headers/Public/yoga/Yoga.modulemap\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SwiftCXX;
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftCXX-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

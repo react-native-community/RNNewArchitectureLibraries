@@ -233,3 +233,103 @@ And here we hit some issue related to the layout of our framework:
 Looking at [here](https://www.swift.org/documentation/cxx-interop/status/) it seems like that types within Namespaces are not supported yet, only functions.
 
 :::
+
+---
+## Iteration 2
+
+I was not convinced about the obstacle:
+
+> Looking at [here](https://www.swift.org/documentation/cxx-interop/status/) it seems like that types within Namespaces are not supported yet, only functions.
+
+So I make another test:
+
+1. Create a `ios/Person.hpp` file and populate it with the code:
+   ```c++
+   #ifndef Person_hpp
+    #define Person_hpp
+
+    #include <string>
+    namespace facebook::react {
+    class Person {
+    public:
+    Person(int age): _age(age) {};
+    //  ~Person();
+    int doubleAge() ;
+    private:
+    int _age;
+    };
+    };
+
+    #endif /* Person_hpp */
+   ```
+2. Create a `ios/Person.cpp` file and populate it with the code:
+   ```c++
+    #include "Person.hpp"
+
+    int facebook::react::Person::doubleAge() {
+    return this->_age * 2;
+    }
+   ```
+3. Update the `SwiftCXX-Bridging-Header.h` with the code:
+   ```diff
+   + #import "Person.hpp"
+   ```
+4. Update the `RTNCalculator.swift` file as it follows:
+   ```diff
+    import Foundation
+    + import React
+
+    - import ReactCommon
+    - import React_Codegen
+
+    @objc
+    - class RTNCalculator: NSObject, NativeCalculatorSpec {
+    + public class RTNCalculatorSwift: NSObject/*, NativeCalculatorSpec*/ {
+
+    static func moduleName() -> String {
+        return "RTNCalculator"
+    }
+
+    func add(_ a: Double, b: Double, resolve: RCTPromiseResolveBlock!, reject: RCTPromiseRejectBlock!) {
+        resolve(a+b)
+    }
+
+    + @objc
+    + public func giveMeAString() -> String {
+    +    var p = facebook.react.Person(35)
+    +    return "\(p.doubleAge())"
+    + }
+
+    -  func getTurboModule(params: facebook.react.ObjCTurboModule.InitParams) -> std.shared_ptr<facebook.react.TurboModule> {
+    -    return std.make_shared<facebook.react.NativeCalculatorSpecJSI>(params);
+    -  }
+    }
+   ```
+   Specifically:
+   - import React to get access to `RCTPromiseXXX`
+   - make the class `public`
+   - add the `public giveMeAString` method that uses the C++ person object.
+5. Update the `AppDelegate.mm` file
+  ```diff
+  #import <React/RCTBundleURLProvider.h>
+  +  #import "SwiftCXX-Swift.h"
+
+  @implementation AppDelegate
+
+  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+  {
+    self.moduleName = @"SwiftCXX";
+    // You can add your custom initial props in the dictionary below.
+    // They will be passed down to the ViewController used by React Native.
+    self.initialProps = @{};
+
+  +  RTNCalculatorSwift * calc = [[RTNCalculatorSwift alloc] init];
+  +  id s = [calc giveMeAString];
+
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  }
+  ```
+
+This code builds and the `[calc giveMeAString]` is computed and correctly returned.
+
+NOTE: I had a bit of a hard time making this work with `std::string`, but this is probably due to my ignorance with C++
