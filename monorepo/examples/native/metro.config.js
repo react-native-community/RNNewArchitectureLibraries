@@ -1,11 +1,9 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-const path = require('path');
 const escape = require('escape-string-regexp');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
-const pak = require('../package.json');
-
-const root = path.resolve(__dirname, '..');
-const modules = Object.keys({ ...pak.peerDependencies });
+const path = require('path');
+const root = path.resolve(__dirname, '..', '..');
+const modules = ['react', 'react-native'];
 
 /**
  * Metro configuration
@@ -15,6 +13,7 @@ const modules = Object.keys({ ...pak.peerDependencies });
  */
 const config = {
   watchFolders: [root],
+  resetCache: true,
 
   // We need to make sure that only one version is loaded for peerDependencies
   // So we block them at the root, and alias them to the versions in example's node_modules

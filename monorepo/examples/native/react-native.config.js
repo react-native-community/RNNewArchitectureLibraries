@@ -1,10 +1,16 @@
+const fs = require('fs');
 const path = require('path');
-const pak = require('../package.json');
+
+const dependencies = {};
+const PACKAGES_DIR = path.join(__dirname, '..', '..', 'packages');
+fs.readdirSync(PACKAGES_DIR).forEach((name) => {
+  if (typeof name === 'string') {
+    dependencies[`${name}`] = {
+      root: path.join(PACKAGES_DIR, name),
+    };
+  }
+});
 
 module.exports = {
-  dependencies: {
-    [pak.name]: {
-      root: path.join(__dirname, '..'),
-    },
-  },
+  dependencies,
 };

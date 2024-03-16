@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.73.6"
+    "react-native": "0.73.6",
+    "react-native-turbo-monorepo": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

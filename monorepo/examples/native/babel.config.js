@@ -1,5 +1,13 @@
+const fs = require('fs');
 const path = require('path');
-const pak = require('../package.json');
+
+const alias = {};
+const PACKAGES_DIR = path.join(__dirname, '..', '..', 'packages');
+fs.readdirSync(PACKAGES_DIR).forEach((name) => {
+  if (typeof name === 'string') {
+    alias[`${name}`] = path.join(PACKAGES_DIR, name, 'src');
+  }
+});
 
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
@@ -8,9 +16,7 @@ module.exports = {
       'module-resolver',
       {
         extensions: ['.tsx', '.ts', '.js', '.json'],
-        alias: {
-          [pak.name]: path.join(__dirname, '..', pak.source),
-        },
+        alias,
       },
     ],
   ],
