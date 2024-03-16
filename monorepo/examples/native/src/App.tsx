@@ -1,13 +1,20 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-turbo-monorepo';
+import { multiply, startListening } from 'react-native-turbo-monorepo';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
+    const subscribe = startListening((event: any) => {
+      console.log('event', event);
+    });
     multiply(3, 7).then(setResult);
+
+    return () => {
+      subscribe.remove();
+    };
   }, []);
 
   return (
@@ -22,10 +29,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });
