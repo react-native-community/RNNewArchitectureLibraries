@@ -9,5 +9,9 @@ abstract class TurboMonorepoSpec extends ReactContextBaseJavaModule {
     super(context);
   }
 
+  public abstract void addListener(String eventName);
+
+  public abstract void removeListeners(double count);
+
   public abstract void multiply(double a, double b, Promise promise);
 }
