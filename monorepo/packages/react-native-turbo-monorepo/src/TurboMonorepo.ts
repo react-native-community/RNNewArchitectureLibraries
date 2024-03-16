@@ -13,7 +13,7 @@ const TurboMonorepoModule = isTurboModuleEnabled
   ? require('./NativeTurboMonorepo').default
   : NativeModules.TurboMonorepo;
 
-const TurboMonorepo = TurboMonorepoModule
+export const TurboMonorepo = TurboMonorepoModule
   ? TurboMonorepoModule
   : new Proxy(
       {},
@@ -23,7 +23,3 @@ const TurboMonorepo = TurboMonorepoModule
         },
       }
     );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return TurboMonorepo.multiply(a, b);
-}
