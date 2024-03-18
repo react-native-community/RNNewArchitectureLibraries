@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android"],
-  "ios": {
-    "modules": ["TurboMonorepo"]
-  },
-  "android": {
-    "modules": ["com.turbomonorepo"]
-  }
-}

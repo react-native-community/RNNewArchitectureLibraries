@@ -49,14 +49,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "peerDependencies": {
-    "expo": "*",
     "react": "*",
     "react-native": "*"
-  },
-  "peerDependenciesMeta": {
-    "expo": {
-      "optional": true
-    }
   },
   "react-native-builder-bob": {
     "source": "src",
