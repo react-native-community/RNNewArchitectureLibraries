@@ -4,7 +4,7 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 >**Note**: It is configured for a monorepository. If you want to run it, go to the root of the project and run:
 
-### Runs the expo server.
+### Runs the metro server.
 
 ```bash
 yarn native start
