@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, NativeEventEmitter } from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-tsc-event-emitter' doesn't seem to be linked. Make sure: \n\n` +
@@ -26,4 +26,9 @@ const TscEventEmitter = TscEventEmitterModule
 
 export function multiply(a: number, b: number): Promise<number> {
   return TscEventEmitter.multiply(a, b);
+}
+
+export function startListening(listener: (event: any) => void) {
+  const eventEmitter = new NativeEventEmitter(TscEventEmitter);
+  return eventEmitter.addListener(`multiplyEvent`, listener);
 }
