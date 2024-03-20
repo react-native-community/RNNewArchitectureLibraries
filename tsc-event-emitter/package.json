@@ -1,0 +1,65 @@
+{
+  "name": "react-native-tsc-event-emitter",
+  "version": "0.1.0",
+  "description": "tsc",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-native-community/react-native-tsc-event-emitter.git"
+  },
+  "author": "<Your Name> <your_email@your_provider.com> (https://github.com/<your_github_handle)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/<your_github_handle/example-library/issues"
+  },
+  "homepage": "https://github.com/<your_github_handle/example-library#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.44",
+    "typescript": "^5.2.2"
+  },
+  "resolutions": {
+    "@types/react": "^18.2.44"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "RNTscEventEmitterSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  }
+}
